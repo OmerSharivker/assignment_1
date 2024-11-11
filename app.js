@@ -12,8 +12,10 @@ app.get('/',(req,res)=>{
  
  dbConnect();
 
+ app.use('/api', require('./routes/postRoutes.js'));
+
+
+
 app.listen(port, () =>{
     console.log(`server is running on port ${port}`)
 })
-
-app.use('/api', require('./routes/postRoutes.js'));
