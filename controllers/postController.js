@@ -19,7 +19,7 @@ class postController {
        const newPost=  await postModel.create(req.body)
        if (newPost) 
         {
-        responseReturn(res,201,newPost._id)
+        responseReturn(res,201,newPost)
        } else {
         responseReturn(res,400,{message : "new post not working"})
         console.log("new post")
