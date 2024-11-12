@@ -1,9 +1,15 @@
+const { response } = require("express");
 const postModel = require("../models/postModel");
 const { responseReturn } = require("../utils/response");
 
 class postController {
     getAllPosts = async (req, res) => {
-        res.send('get all posts');
+        const getPosts = await postModel.find();
+        if(getPosts){
+            responseReturn(res,200, {getPosts, message: "posts fetched"});
+        } else {
+            responseReturn(res, 400, {message : "Problem in fetching posts"});
+        }
     }
     //end method 
 
