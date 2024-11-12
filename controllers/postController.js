@@ -55,8 +55,24 @@ class postController {
       } catch (error) {
         responseReturn(res,500,{message:"problem with find by id"})
       }
-
      }
+     //end method  
+
+
+     updateById =  async (req,res) => {
+        const {id} =req.params
+        const {message} = req.body
+       try {
+         const updatePost= await postModel.findByIdAndUpdate(new ObjectId(id),{message : message},{new : true})
+       if (updatePost) {
+        responseReturn(res,201,{updatePost,message:"post updated by id"})
+       } else {
+        responseReturn(res,400,{message:"post not updated by id"})
+       }
+       } catch (error) {
+        responseReturn(res,500,{message:"problem with updated by id"})
+       }
+      }
 }
 
 module.exports = new postController();
