@@ -1,2 +1,12 @@
 ###
 GET http://localhost:4000/api/posts
+
+
+###
+POST  http://localhost:4000/api/posts
+Content-Type: application/json
+
+{
+    "message": "this is first",
+    "sender": 123456
+}
