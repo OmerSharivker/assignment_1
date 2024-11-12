@@ -1,6 +1,8 @@
 const { response } = require("express");
 const postModel = require("../models/postModel");
 const { responseReturn } = require("../utils/response");
+const {mongo :{ObjectId}} =require('mongoose')
+
 
 class postController {
     getAllPosts = async (req, res) => {
@@ -40,6 +42,21 @@ class postController {
         }
     }
     //end method
+    
+    getPostById =  async (req, res) => {
+       const {id} =req.params
+      try {
+        const post= await postModel.findById(new ObjectId(id))
+        if(post)
+          responseReturn(res,200,{post,message:"post found by id"})
+        else{
+            responseReturn(res,400,{message:"post not found by id"})
+        }
+      } catch (error) {
+        responseReturn(res,500,{message:"problem with find by id"})
+      }
+
+     }
 }
 
 module.exports = new postController();

@@ -8,6 +8,6 @@ router.get('/posts',postController.getAllPosts)
 router.get('/posts/sender',postController.getPostsBySender);
 
 router.post('/posts',postController.savePost)
-
+router.get('/posts/:id',postController.getPostById)
 
 module.exports = router;

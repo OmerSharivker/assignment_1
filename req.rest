@@ -12,3 +12,6 @@ Content-Type: application/json
     "message": "this is first",
     "sender": 12345
 }
+
+###
+GET http://localhost:4000/api/posts/67330bc8031933a4ac3c4539
