@@ -28,6 +28,21 @@ class postController {
     }
     //end method
 
+    getPostsBySender =  async (req, res) => {
+        try {
+            const senderPosts = await postModel.find({ 'sender' : req.query.sender});
+            if(senderPosts){
+                responseReturn(res, 200, {senderPosts});
+            }
+            else{
+                responseReturn(res, 400, {message: "couldnt fetch by sender posts"});
+            }
+        } catch (error) {
+                responseReturn(res, 500, {message: "unknown error"});
+        }
+    }
+    //end method
+    
     getPostById =  async (req, res) => {
        const {id} =req.params
       try {
