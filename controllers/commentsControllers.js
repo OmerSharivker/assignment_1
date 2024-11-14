@@ -47,7 +47,7 @@ class postController {
          if(updatedComment){
             responseReturn(res,200,{updatedComment, message:"success"});
          }else{
-            responseReturn(res,400,{message:"problem with new comment"});
+            responseReturn(res,400,{message:"problem with new "});
          }
       } catch (error) {
          responseReturn(res,400,{message:"internal server error "});
@@ -55,6 +55,31 @@ class postController {
    }
    //end method
 
+   deleteComment = async (req, res) => {
+    const {commentId}=req.params;
+    try {
+        await commentsModel.findByIdAndDelete(new ObjectId(commentId));
+          responseReturn(res,200,{message:"comment deleted successfully"});
+    } catch (error) {
+       responseReturn(res,400,{message:"internal server error "});
+    }
+ }
+ //end method
+
+   getComments= async (req, res) => {
+    const {postId}=req.params;
+     try {
+        const allComments= await commentsModel.find({postId})
+        if (allComments) {
+            responseReturn(res,200,{allComments});
+        }else{
+            responseReturn(res,400,{message:"problem with all comments "});
+        }
+     } catch (error) {
+        responseReturn(res,400,{message:"internal server error "});
+    }
+ }
+ //end method
 }
 
 module.exports = new postController();
