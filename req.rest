@@ -25,20 +25,29 @@ Content-Type: application/json
     "message": "update message"
 }
 
+
+////////////////////////////////////////////// comments \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ###
 POST  http://localhost:4000/api/comment
 Content-Type: application/json
 
 {
-    "content": "this is first comment",
-    "postId": "6735ea87b94c9bdd12ae47d5"
+    "content": "this ",
+    "postId": "6735e5433fc7b7ca4f640709"
 }
+
 ###
-GET http://localhost:4000/api/comment/6735eab3b94c9bdd12ae47d7
+GET http://localhost:4000/api/comment/6735e7cd7d7e1b2443eac61f
 ###
-PUT http://localhost:4000/api/comment/6735eab3b94c9bdd12ae47d7
+PUT http://localhost:4000/api/comment/6735e7cd7d7e1b2443eac61f
 Content-Type: application/json
 
 {
     "content": "this is updated"
 }
+
+###
+DELETE  http://localhost:4000/api/comment/6735e7cd7d7e1b2443eac61f
+
+###
+GET http://localhost:4000/api/comment/get-all-comments/6735e5433fc7b7ca4f640709
