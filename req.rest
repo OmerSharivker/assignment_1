@@ -31,5 +31,14 @@ Content-Type: application/json
 
 {
     "content": "this is first comment",
-    "postId": "6735e5433fc7b7ca4f640709"
+    "postId": "6735ea87b94c9bdd12ae47d5"
+}
+###
+GET http://localhost:4000/api/comment/6735eab3b94c9bdd12ae47d7
+###
+PUT http://localhost:4000/api/comment/6735eab3b94c9bdd12ae47d7
+Content-Type: application/json
+
+{
+    "content": "this is updated"
 }
