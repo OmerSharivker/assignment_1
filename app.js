@@ -13,5 +13,6 @@ app.get('/',(req,res)=>{
  })
  dbConnect();
  app.use('/api', require('./routes/postRoutes.js'));
+ app.use('/api', require('./routes/commentRoutes.js'));
 
  module.exports=app

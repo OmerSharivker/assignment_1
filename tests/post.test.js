@@ -10,7 +10,6 @@ beforeAll(async () =>{
 })
 
 afterAll(async () =>{
-    await post.deleteMany();
     await mongoose.connection.close();
 })    
 
