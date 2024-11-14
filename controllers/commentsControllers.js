@@ -6,7 +6,7 @@ const commentsModel = require("../models/commentsModel");
 
 
 class postController {
-    postComment = async (req, res) => {
+   postComment = async (req, res) => {
      const {content,postId}=req.body;
      try {
         const newComment= await commentsModel.create({
@@ -21,9 +21,39 @@ class postController {
      } catch (error) {
         responseReturn(res,400,{message:"internal server error "})
      }
+   }
+   //end method 
 
-    }
-    //end method 
+   readComment = async (req, res) => {
+      const {commentId}=req.params;
+      try {
+         const comment = await commentsModel.findById(new ObjectId(commentId));
+         if(comment){
+            responseReturn(res,200,comment.content);
+         }else{
+            responseReturn(res,400,{message:"problem with new comment"});
+         }
+      } catch (error) {
+         responseReturn(res,400,{message:"internal server error "});
+      }
+   }
+   //end method
+
+   updateComment = async (req, res) => {
+      const {commentId}=req.params;
+      const {content} = req.body;
+      try {
+         const updatedComment = await commentsModel.findByIdAndUpdate(new ObjectId(commentId), {content : content}, {new : true});
+         if(updatedComment){
+            responseReturn(res,200,{updatedComment, message:"success"});
+         }else{
+            responseReturn(res,400,{message:"problem with new comment"});
+         }
+      } catch (error) {
+         responseReturn(res,400,{message:"internal server error "});
+      }
+   }
+   //end method
 
 }
 
