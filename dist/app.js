@@ -8,6 +8,7 @@ const db_1 = require("./utils/db");
 const body_parser_1 = __importDefault(require("body-parser"));
 const postRoutes_1 = __importDefault(require("./routes/postRoutes"));
 const commentRoutes_1 = __importDefault(require("./routes/commentRoutes"));
+const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 require('dotenv').config();
 const app = (0, express_1.default)();
 //middleware
@@ -19,5 +20,6 @@ app.get('/', (req, res) => {
 (0, db_1.dbConnect)();
 app.use('/api', postRoutes_1.default);
 app.use('/api', commentRoutes_1.default);
+app.use('/api', authRoutes_1.default);
 exports.default = app;
 //# sourceMappingURL=app.js.map
