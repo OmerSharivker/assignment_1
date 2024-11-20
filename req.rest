@@ -14,11 +14,11 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:4000/api/posts/67333923f27e195983e634f1
+GET http://localhost:4000/api/posts/6735e5433fc7b7ca4f640709
 
 
 ###
-PUT  http://localhost:4000/api/posts/67333923f27e195983e634f1
+PUT  http://localhost:4000/api/posts/6735e5433fc7b7ca4f640709
 Content-Type: application/json
 
 {
@@ -37,9 +37,9 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:4000/api/comment/6735e7cd7d7e1b2443eac61f
+GET http://localhost:4000/api/comment/6735f54904b38e76500369e3
 ###
-PUT http://localhost:4000/api/comment/6735e7cd7d7e1b2443eac61f
+PUT http://localhost:4000/api/comment/6735f54904b38e76500369e3
 Content-Type: application/json
 
 {
@@ -47,7 +47,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE  http://localhost:4000/api/comment/6735e7cd7d7e1b2443eac61f
+DELETE  http://localhost:4000/api/comment/6735f54904b38e76500369e3
 
 ###
 GET http://localhost:4000/api/comment/get-all-comments/6735e5433fc7b7ca4f640709
