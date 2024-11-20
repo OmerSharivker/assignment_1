@@ -3,6 +3,8 @@ import  {dbConnect}  from './utils/db';
 import bodyParser from 'body-parser';
 import postRoutes from './routes/postRoutes';
 import commentRoutes from './routes/commentRoutes';
+import authRoutes from './routes/authRoutes';
+
 require('dotenv').config();
 
 const app =express();
@@ -18,6 +20,7 @@ app.get('/',(req,res)=>{
 
 app.use('/api', postRoutes);
 app.use('/api', commentRoutes);
+app.use('/api',  authRoutes);
 
 export default app;
 
