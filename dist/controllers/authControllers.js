@@ -33,10 +33,35 @@ class authControllers {
                     (0, response_1.responseReturn)(res, 400, { error: "password or email are not found" });
                     return;
                 }
-                (0, response_1.responseReturn)(res, 400, { message: "login ok" });
+                (0, response_1.responseReturn)(res, 200, { message: "login ok" });
             }
             catch (error) {
                 (0, response_1.responseReturn)(res, 500, { error: "internal server error" });
+            }
+        });
+        this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { email, password } = req.body;
+            if (!email || !password) {
+                (0, response_1.responseReturn)(res, 400, { error: "email or password not valid" });
+                return;
+            }
+            try {
+                const userExists = yield userModel_1.default.findOne({ email });
+                if (userExists) {
+                    (0, response_1.responseReturn)(res, 400, { error: "User already exists" });
+                    return;
+                }
+                const salt = yield bcrypt_1.default.genSalt(10);
+                const hashPassword = yield bcrypt_1.default.hash(password, salt);
+                const user = yield userModel_1.default.create({
+                    email,
+                    password: hashPassword,
+                });
+                (0, response_1.responseReturn)(res, 200, user);
+                return;
+            }
+            catch (error) {
+                (0, response_1.responseReturn)(res, 401, error);
             }
         });
     }
