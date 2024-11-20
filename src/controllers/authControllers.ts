@@ -23,12 +23,37 @@ class authControllers {
             responseReturn(res,400,{error : "password or email are not found"})
             return;
         }
-        responseReturn(res,400,{message : "login ok"})
+        responseReturn(res,200,{message : "login ok"})
 
      } catch (error) {
         responseReturn(res,500,{error : "internal server error"})
      }
-}
-
+   }
+   
+   register = async (req: Request, res: Response): Promise<void> => {
+      const {email, password} = req.body;
+      if(!email || !password){
+         responseReturn(res,400,{error : "email or password not valid"});
+          return;
+      }
+      try {
+         const userExists = await User.findOne({email});
+  
+         if ( userExists) { 
+            responseReturn(res,400,{error : "User already exists"});
+            return;
+         }
+         const salt = await bcrypt.genSalt(10);
+         const hashPassword = await bcrypt.hash(password,salt);
+         const user = await User.create({
+            email,
+            password : hashPassword,
+         });
+         responseReturn(res,200, user);
+         return;
+      } catch (error) {
+         responseReturn(res,401, error);
+      }
+   }
 }
 export default new authControllers();
