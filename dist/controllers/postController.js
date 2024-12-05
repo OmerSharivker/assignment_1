@@ -32,8 +32,9 @@ class PostController {
             }
         });
         this.savePost = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { userId } = req.body;
             try {
-                const newPost = yield postModel_1.default.create(req.body);
+                const newPost = yield postModel_1.default.create({ message: req.body.message, sender: userId });
                 if (newPost) {
                     (0, response_1.responseReturn)(res, 201, newPost);
                 }
@@ -47,6 +48,7 @@ class PostController {
             }
         });
         this.getPostsBySender = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            console.log(req.body);
             try {
                 const senderPosts = yield postModel_1.default.find({ 'sender': req.query.sender });
                 if (senderPosts) {
