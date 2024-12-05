@@ -3,10 +3,11 @@ GET http://localhost:4000/api/posts
 
 ###
 GET http://localhost:4000/api/posts/sender?sender=12345
-
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RmNWU1Njg1YTgwODFjMDk1OTJlYiIsImlhdCI6MTczMjE5NDMzNywiZXhwIjoxNzMyMTk3OTM3fQ.ekUcRa6igBKvc4WVdq6B8ALlD9Tep2-Bf9Imn7VOFcs
 ###
 POST  http://localhost:4000/api/posts
 Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RmNWU1Njg1YTgwODFjMDk1OTJlYiIsImlhdCI6MTczMjE5NDMzNywiZXhwIjoxNzMyMTk3OTM3fQ.ekUcRa6igBKvc4WVdq6B8ALlD9Tep2-Bf9Imn7VOFcs
 
 {
     "message": "this is first d",
@@ -59,7 +60,7 @@ POST  http://localhost:4000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "user@gmail.com ",
+    "email": "user@gmail.cm",
     "password": "123456"
 }
 
@@ -68,6 +69,29 @@ POST  http://localhost:4000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "user@gmail.com ",
+    "email": "user@gmail.cm",
     "password": "123456"
+}
+
+###
+GET  http://localhost:4000/api/auth/refreshToken
+Content-Type: application/json
+
+{
+   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RmNWU1Njg1YTgwODFjMDk1OTJlYiIsImlhdCI6MTczMjExMzkzOSwiZXhwIjoxNzMyNzE4NzM5fQ.i8DCePLoGe2UMAZ2r4KL8KrNxYe5XxamDIF_BUurxgA"
+}
+
+###
+GET  http://localhost:4000/api/auth/logout
+Content-Type: application/json
+
+{
+   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RmNWU1Njg1YTgwODFjMDk1OTJlYiIsImlhdCI6MTczMjExMzkzOSwiZXhwIjoxNzMyNzE4NzM5fQ.i8DCePLoGe2UMAZ2r4KL8KrNxYe5XxamDIF_BUurxgA"
+}
+###
+GET  http://localhost:4000/api/users/logout
+Content-Type: application/json
+
+{
+   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RmNWU1Njg1YTgwODFjMDk1OTJlYiIsImlhdCI6MTczMjExMzkzOSwiZXhwIjoxNzMyNzE4NzM5fQ.i8DCePLoGe2UMAZ2r4KL8KrNxYe5XxamDIF_BUurxgA"
 }
