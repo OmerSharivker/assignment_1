@@ -2,16 +2,15 @@
 GET http://localhost:4000/api/posts
 
 ###
-GET http://localhost:4000/api/posts/sender?sender=12345
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RmNWU1Njg1YTgwODFjMDk1OTJlYiIsImlhdCI6MTczMjE5NDMzNywiZXhwIjoxNzMyMTk3OTM3fQ.ekUcRa6igBKvc4WVdq6B8ALlD9Tep2-Bf9Imn7VOFcs
+GET http://localhost:4000/api/posts/sender
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxMjc3OSwiZXhwIjoxNzMzNDE2Mzc5fQ.f1WtONbQFvgo2iFUeJNH9xSz47zswdFO35pXj13qDpQ
 ###
 POST  http://localhost:4000/api/posts
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxNDMxNSwiZXhwIjoxNzMzNDE3OTE1fQ.dWORrIE4ZUFWQt4jaXMAzKw1UnmbIXHL6XJ5A92Yrxc
 Content-Type: application/json
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RmNWU1Njg1YTgwODFjMDk1OTJlYiIsImlhdCI6MTczMjE5NDMzNywiZXhwIjoxNzMyMTk3OTM3fQ.ekUcRa6igBKvc4WVdq6B8ALlD9Tep2-Bf9Imn7VOFcs
 
 {
-    "message": "this is first d",
-    "sender": 12345
+    "message": "Shrivker gay"
 }
 
 ###
@@ -19,7 +18,8 @@ GET http://localhost:4000/api/posts/6735e5433fc7b7ca4f640709
 
 
 ###
-PUT  http://localhost:4000/api/posts/6735e5433fc7b7ca4f640709
+PUT  http://localhost:4000/api/posts/6751cf3a155423d2aa357f95
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxNDMxNSwiZXhwIjoxNzMzNDE3OTE1fQ.dWORrIE4ZUFWQt4jaXMAzKw1UnmbIXHL6XJ5A92Yrxc
 Content-Type: application/json
 
 {
@@ -30,25 +30,28 @@ Content-Type: application/json
 ////////////////////////////////////////////// comments \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ###
 POST  http://localhost:4000/api/comment
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxNDMxNSwiZXhwIjoxNzMzNDE3OTE1fQ.dWORrIE4ZUFWQt4jaXMAzKw1UnmbIXHL6XJ5A92Yrxc
 Content-Type: application/json
 
 {
-    "content": "this ",
-    "postId": "6735e5433fc7b7ca4f640709"
+    "content": "this is the first comment ",
+    "postId": "6751cf3a155423d2aa357f95"
 }
 
 ###
-GET http://localhost:4000/api/comment/6735f54904b38e76500369e3
+GET http://localhost:4000/api/comment/6751d2ad29babb95e23add2e
 ###
-PUT http://localhost:4000/api/comment/6735f54904b38e76500369e3
+PUT http://localhost:4000/api/comment/6751d2ad29babb95e23add2e
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxNDMxNSwiZXhwIjoxNzMzNDE3OTE1fQ.dWORrIE4ZUFWQt4jaXMAzKw1UnmbIXHL6XJ5A92Yrxc
 Content-Type: application/json
 
 {
-    "content": "this is updated"
+    "content": "this is updated comment"
 }
 
 ###
-DELETE  http://localhost:4000/api/comment/6735f54904b38e76500369e3
+DELETE  http://localhost:4000/api/comment/6751d2ad29babb95e23add2e
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxNDMxNSwiZXhwIjoxNzMzNDE3OTE1fQ.dWORrIE4ZUFWQt4jaXMAzKw1UnmbIXHL6XJ5A92Yrxc
 
 ###
 GET http://localhost:4000/api/comment/get-all-comments/6735e5433fc7b7ca4f640709
@@ -60,7 +63,7 @@ POST  http://localhost:4000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "user@gmail.cm",
+    "email": "user@gmail.com",
     "password": "123456"
 }
 
@@ -69,7 +72,7 @@ POST  http://localhost:4000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "user@gmail.cm",
+    "email": "user@gmail.com",
     "password": "123456"
 }
 
@@ -78,7 +81,7 @@ GET  http://localhost:4000/api/auth/refreshToken
 Content-Type: application/json
 
 {
-   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RmNWU1Njg1YTgwODFjMDk1OTJlYiIsImlhdCI6MTczMjExMzkzOSwiZXhwIjoxNzMyNzE4NzM5fQ.i8DCePLoGe2UMAZ2r4KL8KrNxYe5XxamDIF_BUurxgA"
+   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQwOTExNywiZXhwIjoxNzM0MDEzOTE3fQ.aapllS1PxXOZ1eKD1-MTMFlBSqVOzNIFt6fMvsOGldE"
 }
 
 ###
@@ -86,12 +89,12 @@ GET  http://localhost:4000/api/auth/logout
 Content-Type: application/json
 
 {
-   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RmNWU1Njg1YTgwODFjMDk1OTJlYiIsImlhdCI6MTczMjExMzkzOSwiZXhwIjoxNzMyNzE4NzM5fQ.i8DCePLoGe2UMAZ2r4KL8KrNxYe5XxamDIF_BUurxgA"
+   "refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxNDMxNSwiZXhwIjoxNzM0MDE5MTE1fQ.HyIQk3wr-pjP_bRxjSTQ1WcK1H8UaTynSiphXff0wWQ" 
 }
 ###
 GET  http://localhost:4000/api/users/logout
 Content-Type: application/json
 
 {
-   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RmNWU1Njg1YTgwODFjMDk1OTJlYiIsImlhdCI6MTczMjExMzkzOSwiZXhwIjoxNzMyNzE4NzM5fQ.i8DCePLoGe2UMAZ2r4KL8KrNxYe5XxamDIF_BUurxgA"
+   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxNDMxNSwiZXhwIjoxNzM0MDE5MTE1fQ.HyIQk3wr-pjP_bRxjSTQ1WcK1H8UaTynSiphXff0wWQ"
 }

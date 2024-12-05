@@ -6,11 +6,12 @@ import commentsModel from '../models/commentsModel';
 
 class PostController {
    postComment = async (req: Request, res: Response): Promise<void> => {
-      const { content, postId } = req.body;
+      const { content, postId, userId } = req.body;
       try {
          const newComment = await commentsModel.create({
             content,
-            postId: new Types.ObjectId(postId)
+            postId: new Types.ObjectId(postId),
+            ownerId: new Types.ObjectId(userId)
          });
          if (newComment) {
             responseReturn(res, 201, newComment);
@@ -38,8 +39,12 @@ class PostController {
 
    updateComment = async (req: Request, res: Response): Promise<void> => {
       const { commentId } = req.params;
-      const { content } = req.body;
+      const { content, userId } = req.body;
       try {
+         const comment = await commentsModel.findById(new Types.ObjectId(commentId));
+         if (comment.ownerId.toString() !== userId) {
+            responseReturn(res, 400, { message: "you are not the owner of this comment" });
+         }
          const updatedComment = await commentsModel.findByIdAndUpdate(
             new Types.ObjectId(commentId),
             { content: content },
@@ -57,7 +62,12 @@ class PostController {
 
    deleteComment = async (req: Request, res: Response): Promise<void> => {
       const { commentId } = req.params;
+      const { userId } = req.body; 
       try {
+         const comment = await commentsModel.findById(new Types.ObjectId(commentId));
+         if(comment.ownerId.toString() !== userId) {
+            responseReturn(res, 400, { message: "you are not the owner of this comment" });
+         }
          await commentsModel.findByIdAndDelete(new Types.ObjectId(commentId));
          responseReturn(res, 200, { message: "comment deleted successfully" });
       } catch (error) {

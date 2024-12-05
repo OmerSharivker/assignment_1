@@ -1,8 +1,14 @@
 import {Schema,model} from 'mongoose'
 
 const postSchema =new Schema({
-    "message": String,
-    "sender":Number
+    message:{
+        type: String,
+        required :true
+    },
+    ownerId:{
+        type: Schema.ObjectId,
+        required :true
+    }
 })
 
 
