@@ -9,6 +9,10 @@ const commentSchema =new Schema({
     postId:{
         type: Schema.ObjectId,
         required :true
+    },
+    ownerId:{
+        type: Schema.ObjectId,
+        required :true
     }
 })
 

@@ -20,7 +20,7 @@ class PostController {
     savePost = async (req: Request, res: Response): Promise<void> => {
         const {userId}=req.body
         try {
-            const newPost = await postModel.create({message: req.body.message ,sender : userId});
+            const newPost = await postModel.create({message: req.body.message ,ownerId : userId});
             if (newPost) {
                 responseReturn(res, 201, newPost);
             } else {
@@ -33,13 +33,12 @@ class PostController {
     }
 
     getPostsBySender = async (req: Request, res: Response): Promise<void> => {
-        console.log(req.body)
         try {
-            const senderPosts = await postModel.find({ 'sender': req.query.sender });
+            const senderPosts = await postModel.find({ 'ownerId': req.body.userId });
             if (senderPosts) {
                 responseReturn(res, 200, { senderPosts });
             } else {
-                responseReturn(res, 400, { message: "couldn't fetch by sender posts" });
+                responseReturn(res, 400, { message: "couldn't fetch the specific user posts" });
             }
         } catch (error) {
             responseReturn(res, 500, { message: "unknown error" });
@@ -62,8 +61,12 @@ class PostController {
 
     updateById = async (req: Request, res: Response): Promise<void> => {
         const { id } = req.params;
-        const { message } = req.body;
+        const { message, userId } = req.body;
         try {
+            const post = await postModel.findById(new Types.ObjectId(id));
+            if(userId !== post.ownerId.toString()){
+                responseReturn(res, 400, { message: "you are not the owner of this post" });
+            }
             const updatePost = await postModel.findByIdAndUpdate(new Types.ObjectId(id), { message: message }, { new: true });
             if (updatePost) {
                 responseReturn(res, 201, { updatePost, message: "post updated by id" });
