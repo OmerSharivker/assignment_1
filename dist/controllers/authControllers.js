@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const response_1 = require("../utils/response");
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const token_1 = require("../utils/token");
 class authControllers {
     constructor() {
         this.login = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -33,7 +34,11 @@ class authControllers {
                     (0, response_1.responseReturn)(res, 400, { error: "password or email are not found" });
                     return;
                 }
-                (0, response_1.responseReturn)(res, 200, { message: "login ok" });
+                const accessToken = yield (0, token_1.createToken)({ id: user._id }, "1h");
+                const refreshToken = yield (0, token_1.createToken)({ id: user._id }, "7d");
+                user.refreshTokens = user.refreshTokens ? [...user.refreshTokens, refreshToken] : [refreshToken];
+                yield user.save();
+                (0, response_1.responseReturn)(res, 200, { refreshToken, accessToken, message: "login ok" });
             }
             catch (error) {
                 (0, response_1.responseReturn)(res, 500, { error: "internal server error" });
@@ -62,6 +67,46 @@ class authControllers {
             }
             catch (error) {
                 (0, response_1.responseReturn)(res, 401, error);
+            }
+        });
+        //end
+        this.refreshToken = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { refreshToken } = req.body;
+            if (!refreshToken) {
+                (0, response_1.responseReturn)(res, 400, { error: "Refresh token is required" });
+                return;
+            }
+            try {
+                const user = yield userModel_1.default.findOne({ refreshTokens: refreshToken });
+                if (!user) {
+                    (0, response_1.responseReturn)(res, 400, { error: "Invalid refresh token" });
+                    return;
+                }
+                const newAccessToken = yield (0, token_1.createToken)({ id: user._id }, "1h");
+                (0, response_1.responseReturn)(res, 200, { token: newAccessToken });
+            }
+            catch (error) {
+                (0, response_1.responseReturn)(res, 500, { error: "Internal server error" });
+            }
+        });
+        this.logout = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { refreshToken } = req.body;
+            if (!refreshToken) {
+                (0, response_1.responseReturn)(res, 400, { error: "Refresh token is required" });
+                return;
+            }
+            try {
+                const user = yield userModel_1.default.findOne({ refreshTokens: refreshToken });
+                if (!user) {
+                    (0, response_1.responseReturn)(res, 400, { error: "Invalid refresh token" });
+                    return;
+                }
+                user.refreshTokens = user.refreshTokens.filter(token => token !== refreshToken);
+                yield user.save();
+                (0, response_1.responseReturn)(res, 200, { message: "Logout successful" });
+            }
+            catch (error) {
+                (0, response_1.responseReturn)(res, 500, { error: "Internal server error" });
             }
         });
     }

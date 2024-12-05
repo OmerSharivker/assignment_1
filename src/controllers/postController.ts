@@ -18,8 +18,9 @@ class PostController {
     }
 
     savePost = async (req: Request, res: Response): Promise<void> => {
+        const {userId}=req.body
         try {
-            const newPost = await postModel.create(req.body);
+            const newPost = await postModel.create({message: req.body.message ,sender : userId});
             if (newPost) {
                 responseReturn(res, 201, newPost);
             } else {
@@ -32,6 +33,7 @@ class PostController {
     }
 
     getPostsBySender = async (req: Request, res: Response): Promise<void> => {
+        console.log(req.body)
         try {
             const senderPosts = await postModel.find({ 'sender': req.query.sender });
             if (senderPosts) {
