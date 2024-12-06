@@ -5,11 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const commentsControllers_1 = __importDefault(require("../controllers/commentsControllers"));
+const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware"));
 const router = express_1.default.Router();
-router.post('/comment', commentsControllers_1.default.postComment);
+router.post('/comment', authMiddleware_1.default, commentsControllers_1.default.postComment);
 router.get('/comment/:commentId', commentsControllers_1.default.readComment);
-router.put('/comment/:commentId', commentsControllers_1.default.updateComment);
-router.delete('/comment/:commentId', commentsControllers_1.default.deleteComment);
+router.put('/comment/:commentId', authMiddleware_1.default, commentsControllers_1.default.updateComment);
+router.delete('/comment/:commentId', authMiddleware_1.default, commentsControllers_1.default.deleteComment);
 router.get('/comment/get-all-comments/:postId', commentsControllers_1.default.getComments);
 exports.default = router;
 //# sourceMappingURL=commentRoutes.js.map

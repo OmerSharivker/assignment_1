@@ -28,7 +28,7 @@ class PostController {
       try {
          const comment = await commentsModel.findById(new Types.ObjectId(commentId));
          if (comment) {
-            responseReturn(res, 200, comment.content);
+            responseReturn(res, 200, comment);
          } else {
             responseReturn(res, 400, { message: "problem with new comment" });
          }

@@ -9,6 +9,10 @@ const commentSchema = new mongoose_1.Schema({
     postId: {
         type: mongoose_1.Schema.ObjectId,
         required: true
+    },
+    ownerId: {
+        type: mongoose_1.Schema.ObjectId,
+        required: true
     }
 });
 exports.default = (0, mongoose_1.model)('comment', commentSchema);
