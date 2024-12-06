@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app")); // Assuming your Express app is exported from app.ts
 const mongoose_1 = __importDefault(require("mongoose"));
+beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+}));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
@@ -23,8 +25,8 @@ describe('Auth Routes', () => {
         const res = yield (0, supertest_1.default)(app_1.default)
             .post('/api/auth/register')
             .send({
-            email: 'newtestszsszzssszzs@gmail.com',
-            password: '123456'
+            email: 'sdashjsssbjhbsdsdjhdasdasasdczxczxc@gmail.com',
+            password: '121212'
         });
         expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveProperty('refreshTokens');
@@ -62,6 +64,21 @@ describe('Auth Routes', () => {
         const res = yield (0, supertest_1.default)(app_1.default)
             .get('/api/auth/logout').send({ refreshToken: refreshToken });
         expect(res.statusCode).toEqual(200);
+    }));
+    test('login - should return error when email or password is missing', () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .post('/api/auth/login')
+            .send({}); // Missing email and password
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty('error', 'password and email are required');
+    }));
+    // Error handling in register when email or password is missing
+    test('register - should return error when email or password is missing', () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .post('/api/auth/register')
+            .send({}); // Missing email and password
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty('error', 'email or password not valid');
     }));
 });
 //# sourceMappingURL=auth.test.js.map
