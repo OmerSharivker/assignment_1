@@ -1,41 +1,26 @@
-/**
+ /**
  * @swagger
  * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  *   schemas:
  *     Post:
  *       type: object
  *       required:
- *         - title
- *         - content
- *         - author
+ *         - message
+ *         - ownerId
  *       properties:
- *         id:
+ *         message:
  *           type: string
- *           description: The auto-generated id of the post
- *         title:
+ *           description: The message content of the post
+ *         ownerId:
  *           type: string
- *           description: The title of the post
- *         content:
- *           type: string
- *           description: The content of the post
- *         author:
- *           type: string
- *           description: The author of the post
- *         createdAt:
- *           type: string
- *           format: date-time
- *           description: The date the post was created
- *         updatedAt:
- *           type: string
- *           format: date-time
- *           description: The date the post was last updated
+ *           description: The ID of the owner (user) of the post
  */
-/**
- * @swagger
- * tags:
- *   name: Posts
- *   description: API for managing posts
- */
+
 
 /**
  * @swagger

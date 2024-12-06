@@ -59,11 +59,11 @@ GET http://localhost:3000/api/comment/get-all-comments/6735e5433fc7b7ca4f640709
 
 
 ###
-POST  http://localhost:3000/api/auth/login
+POST  http://localhost:4000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "ur@gmail.com",
+    "email": "user@gmail.com",
     "password": "123456"
 }
 
@@ -72,7 +72,7 @@ POST  http://localhost:4000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "ur@gmail.com",
+    "email": "user@gmail.com",
     "password": "123456"
 }
 
