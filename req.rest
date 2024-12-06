@@ -6,15 +6,15 @@ GET http://localhost:4000/api/posts/sender
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxMjc3OSwiZXhwIjoxNzMzNDE2Mzc5fQ.f1WtONbQFvgo2iFUeJNH9xSz47zswdFO35pXj13qDpQ
 ###
 POST  http://localhost:3000/api/posts
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFkODQ5MzhlMjc1NjQyNmUwM2UwZiIsImlhdCI6MTczMzQ3MjU4OCwiZXhwIjoxNzMzNDc2MTg4fQ.YW6rZLe2E3QUwd8ojOKASv5TJGVBFePygNMK0zJJxeo
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RlZDFjNGIzNDc0Yjk2ODE0OTFkNiIsImlhdCI6MTczMzQ5NTg1NiwiZXhwIjoxNzMzNDk5NDU2fQ.aMruEkys6ow54BxVm6Gf4v4dJrucaEAREPbwgofAXNA
 Content-Type: application/json
 
 {
-    "message": "dfdfdfdfdf"
+    
 }
 
 ###
-GET http://localhost:4000/api/posts/6735e5433fc7b7ca4f640709
+GET http://localhost:3000/api/posts/6735e5433fc7b7c
 
 
 ###
@@ -59,7 +59,7 @@ GET http://localhost:3000/api/comment/get-all-comments/6735e5433fc7b7ca4f640709
 
 
 ###
-POST  http://localhost:4000/api/auth/login
+POST  http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
@@ -68,12 +68,12 @@ Content-Type: application/json
 }
 
 ###
-POST  http://localhost:4000/api/auth/register
+POST  http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "user@gmail.com",
-    "password": "123456"
+
+   
 }
 
 ###

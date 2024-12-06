@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "jest --coverage --detectOpenHandles --forceExit dist/tests",
+ "test": "jest --coverage --detectOpenHandles --forceExit --no-watch dist/tests",
     "start": "node dist/server.js",
     "dev": "nodemon --watch src --exec ts-node src/server.ts",
     "build": "tsc",

@@ -5,7 +5,7 @@ import postModel from '../models/postModel'
 
 
 let id = "";
-
+let fakeId = "6751b12f555b26da3d29cf74";
 
     beforeAll(async () => {
 
@@ -86,8 +86,36 @@ describe("Posts tests", () => {
         expect(res.body).toHaveProperty("message", "post updated by id");
         expect(res.body.updatePost.message).toEqual("This is an updated test post");
     });
+     
+     // Test for saving a post when the request body is incorrect or missing fields
+     test("save post - failure", async () => {
+        const res = await request(app)
+            .post('/api/posts')
+            .set('Authorization', `Bearer ${global.token}`)
+            .send({});
+        expect(res.statusCode).toEqual(500);
+        expect(res.body).toHaveProperty("message", "unknown error");
+    });
 
-    
+    // Test for getting a post by ID that does not exist
+    test("get post by id - failure (post not found)", async () => {
+        const res = await request(app).get(`/api/posts/nonexistentId`);
+        expect(res.statusCode).toEqual(500);
+        expect(res.body).toHaveProperty("message", "problem with find by id");
+    });
+
+   // Test for updating a post when the user is not the owner
+   test("update post by id - failure (not the owner)", async () => {
+    // Create a new post as another user and try to update it
+    const res = await request(app)
+        .put(`/api/posts/${fakeId}`)
+        .set('Authorization', `Bearer ${global.token}`)
+        .send({
+            message: "Trying to update another user's post"
+        });
+    expect(res.statusCode).toEqual(500);
+    expect(res.body).toHaveProperty("message", "problem with updated by id");
+});
 
 
    

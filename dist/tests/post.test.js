@@ -16,6 +16,7 @@ const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 let id = "";
+let fakeId = "6751b12f555b26da3d29cf74";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const loginRes = yield (0, supertest_1.default)(app_1.default).post('/api/auth/login').send({
@@ -83,6 +84,33 @@ describe("Posts tests", () => {
         expect(res.body).toHaveProperty("updatePost");
         expect(res.body).toHaveProperty("message", "post updated by id");
         expect(res.body.updatePost.message).toEqual("This is an updated test post");
+    }));
+    // Test for saving a post when the request body is incorrect or missing fields
+    test("save post - failure", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .post('/api/posts')
+            .set('Authorization', `Bearer ${global.token}`)
+            .send({});
+        expect(res.statusCode).toEqual(500);
+        expect(res.body).toHaveProperty("message", "unknown error");
+    }));
+    // Test for getting a post by ID that does not exist
+    test("get post by id - failure (post not found)", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default).get(`/api/posts/nonexistentId`);
+        expect(res.statusCode).toEqual(500);
+        expect(res.body).toHaveProperty("message", "problem with find by id");
+    }));
+    // Test for updating a post when the user is not the owner
+    test("update post by id - failure (not the owner)", () => __awaiter(void 0, void 0, void 0, function* () {
+        // Create a new post as another user and try to update it
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .put(`/api/posts/${fakeId}`)
+            .set('Authorization', `Bearer ${global.token}`)
+            .send({
+            message: "Trying to update another user's post"
+        });
+        expect(res.statusCode).toEqual(500);
+        expect(res.body).toHaveProperty("message", "problem with updated by id");
     }));
 });
 //# sourceMappingURL=post.test.js.map

@@ -9,6 +9,8 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const postRoutes_1 = __importDefault(require("./routes/postRoutes"));
 const commentRoutes_1 = __importDefault(require("./routes/commentRoutes"));
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swaggerConfig_1 = __importDefault(require("./swaggerConfig"));
 require('dotenv').config();
 const app = (0, express_1.default)();
 //middleware
@@ -18,6 +20,7 @@ app.get('/', (req, res) => {
     res.send("hello");
 });
 (0, db_1.dbConnect)();
+app.use('/api/docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerConfig_1.default));
 app.use('/api', postRoutes_1.default);
 app.use('/api', commentRoutes_1.default);
 app.use('/api', authRoutes_1.default);

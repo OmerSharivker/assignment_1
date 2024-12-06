@@ -37,13 +37,12 @@ login = async (req: Request, res: Response): Promise<void> => {
    register = async (req: Request, res: Response): Promise<void> => {
       const {email, password} = req.body;
       if(!email || !password){
-         responseReturn(res,400,{error : "email or password not valid"});
-          return;
+        responseReturn(res, 400, { error: "email or password not valid" });
+        return
       }
       try {
          const userExists = await User.findOne({email});
-  
-         if ( userExists) { 
+         if (userExists) { 
             responseReturn(res,400,{error : "User already exists"});
             return;
          }
