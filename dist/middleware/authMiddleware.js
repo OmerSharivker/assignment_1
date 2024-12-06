@@ -12,7 +12,8 @@ const authMiddleware = (req, res, next) => {
         return;
     }
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET_KEY);
+        const secretKey = process.env.JWT_SECRET_KEY || 'testSecretKey'; // Use default if undefined
+        const decoded = jsonwebtoken_1.default.verify(token, secretKey);
         req.body.userId = decoded.id;
         return next();
     }

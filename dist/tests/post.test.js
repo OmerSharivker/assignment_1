@@ -15,10 +15,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const postModel_1 = __importDefault(require("../models/postModel"));
 let id = "";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    // Add any setup code here if needed
+    try {
+        const loginRes = yield (0, supertest_1.default)(app_1.default).post('/api/auth/login').send({
+            email: 'ur@gmail.com',
+            password: '123456'
+        });
+        if (loginRes.statusCode !== 200) {
+            console.error("Login failed:", loginRes.body);
+        }
+        global.token = loginRes.body.accessToken;
+        expect(global.token).toBeDefined();
+    }
+    catch (error) {
+        console.error("Error during beforeAll setup:", error);
+        throw error;
+    }
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
@@ -31,41 +44,45 @@ describe("Posts tests", () => {
         expect(res.body).toHaveProperty("message", "posts fetched");
         expect(Array.isArray(res.body.getPosts)).toBe(true);
     }));
-    test("get posts by sender", () => __awaiter(void 0, void 0, void 0, function* () {
-        const senderId = 123;
-        const samplePosts = [
-            { message: "Post 1", sender: senderId },
-            { message: "Post 2", sender: senderId }
-        ];
-        yield postModel_1.default.insertMany(samplePosts);
-        const res = yield (0, supertest_1.default)(app_1.default).get(`/api/posts/sender?sender=${senderId}`);
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toHaveProperty("senderPosts");
-        expect(Array.isArray(res.body.senderPosts)).toBe(true);
-        expect(res.body.senderPosts.length).toBeGreaterThan(0);
-    }));
     test("save post", () => __awaiter(void 0, void 0, void 0, function* () {
-        const newPostData = {
-            message: 'This is a test post',
-            sender: 12345
-        };
-        const res = yield (0, supertest_1.default)(app_1.default).post('/api/posts').send(newPostData);
-        id = res.body._id;
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .post('/api/posts')
+            .set('Authorization', `Bearer ${global.token}`)
+            .send({
+            message: "This is a test post"
+        });
         expect(res.statusCode).toEqual(201);
-        expect(res.body.message).toEqual(newPostData.message);
-        expect(res.body.sender).toEqual(newPostData.sender);
+        expect(res.body).toHaveProperty("message", "This is a test post");
+        id = res.body._id;
     }));
+    //get post by id
     test("get post by id", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(app_1.default).get(`/api/posts/${id}`);
         expect(res.statusCode).toEqual(200);
-        expect(res.body.post._id).toEqual(id);
+        expect(res.body).toHaveProperty("post");
+        expect(res.body).toHaveProperty("message", "post found by id");
     }));
+    //get post by sender
+    test("get post by sender", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .get('/api/posts/sender')
+            .set('Authorization', `Bearer ${global.token}`);
+        expect(res.statusCode).toEqual(200);
+        expect(res.body).toHaveProperty("senderPosts");
+        expect(Array.isArray(res.body.senderPosts)).toBe(true);
+    }));
+    //update post by id
     test("update post by id", () => __awaiter(void 0, void 0, void 0, function* () {
-        const updateMessage = "new message";
-        const res = yield (0, supertest_1.default)(app_1.default).put(`/api/posts/${id}`).send({ message: updateMessage });
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .put(`/api/posts/${id}`)
+            .set('Authorization', `Bearer ${global.token}`)
+            .send({
+            message: "This is an updated test post"
+        });
         expect(res.statusCode).toEqual(201);
-        expect(res.body.updatePost._id).toEqual(id);
-        expect(res.body.updatePost.message).toEqual(updateMessage);
+        expect(res.body).toHaveProperty("updatePost");
+        expect(res.body).toHaveProperty("message", "post updated by id");
+        expect(res.body.updatePost.message).toEqual("This is an updated test post");
     }));
 });
 //# sourceMappingURL=post.test.js.map

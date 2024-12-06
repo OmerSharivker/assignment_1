@@ -34,7 +34,7 @@ class PostController {
         this.savePost = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { userId } = req.body;
             try {
-                const newPost = yield postModel_1.default.create({ message: req.body.message, sender: userId });
+                const newPost = yield postModel_1.default.create({ message: req.body.message, ownerId: userId });
                 if (newPost) {
                     (0, response_1.responseReturn)(res, 201, newPost);
                 }
@@ -48,14 +48,13 @@ class PostController {
             }
         });
         this.getPostsBySender = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body);
             try {
-                const senderPosts = yield postModel_1.default.find({ 'sender': req.query.sender });
+                const senderPosts = yield postModel_1.default.find({ 'ownerId': req.body.userId });
                 if (senderPosts) {
                     (0, response_1.responseReturn)(res, 200, { senderPosts });
                 }
                 else {
-                    (0, response_1.responseReturn)(res, 400, { message: "couldn't fetch by sender posts" });
+                    (0, response_1.responseReturn)(res, 400, { message: "couldn't fetch the specific user posts" });
                 }
             }
             catch (error) {
@@ -79,8 +78,12 @@ class PostController {
         });
         this.updateById = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const { message } = req.body;
+            const { message, userId } = req.body;
             try {
+                const post = yield postModel_1.default.findById(new mongoose_1.Types.ObjectId(id));
+                if (userId !== post.ownerId.toString()) {
+                    (0, response_1.responseReturn)(res, 400, { message: "you are not the owner of this post" });
+                }
                 const updatePost = yield postModel_1.default.findByIdAndUpdate(new mongoose_1.Types.ObjectId(id), { message: message }, { new: true });
                 if (updatePost) {
                     (0, response_1.responseReturn)(res, 201, { updatePost, message: "post updated by id" });

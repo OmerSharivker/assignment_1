@@ -9,8 +9,8 @@ const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware")
 const router = express_1.default.Router();
 router.get('/posts', postController_1.default.getAllPosts);
 router.get('/posts/sender', authMiddleware_1.default, postController_1.default.getPostsBySender);
-router.post('/posts', postController_1.default.savePost);
+router.post('/posts', authMiddleware_1.default, postController_1.default.savePost);
 router.get('/posts/:id', postController_1.default.getPostById);
-router.put('/posts/:id', postController_1.default.updateById);
+router.put('/posts/:id', authMiddleware_1.default, postController_1.default.updateById);
 exports.default = router;
 //# sourceMappingURL=postRoutes.js.map

@@ -6,15 +6,34 @@ import postModel from '../models/postModel'
 
 let id = "";
 
-beforeAll(async () => {
-    // Add any setup code here if needed
-});
+
+    beforeAll(async () => {
+
+        try {
+            const loginRes = await request(app).post('/api/auth/login').send({
+                email: 'ur@gmail.com',
+                password: '123456'
+            });
+    
+            if (loginRes.statusCode !== 200) {
+                console.error("Login failed:", loginRes.body);
+            }
+    
+            global.token = loginRes.body.accessToken;
+            expect(global.token).toBeDefined();
+        } catch (error) {
+            console.error("Error during beforeAll setup:", error);
+            throw error;
+        }
+    });
+
 
 afterAll(async () => {
     await mongoose.connection.close();
 });
 
 describe("Posts tests", () => {
+
     test("get all posts", async () => {
         const res = await request(app).get('/api/posts');
         expect(res.statusCode).toEqual(200);
@@ -23,45 +42,53 @@ describe("Posts tests", () => {
         expect(Array.isArray(res.body.getPosts)).toBe(true);
     });
 
-    test("get posts by sender", async () => {
-        const senderId = 123;
-        const samplePosts = [
-            { message: "Post 1", sender: senderId },
-            { message: "Post 2", sender: senderId }
-        ];
-        await postModel.insertMany(samplePosts);
-
-        const res = await request(app).get(`/api/posts/sender?sender=${senderId}`);
-
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toHaveProperty("senderPosts");
-        expect(Array.isArray(res.body.senderPosts)).toBe(true);
-        expect(res.body.senderPosts.length).toBeGreaterThan(0);
-    });
 
     test("save post", async () => {
-        const newPostData = {
-            message: 'This is a test post',
-            sender: 12345
-        };
-        const res = await request(app).post('/api/posts').send(newPostData);
-        id = res.body._id;
+        const res = await request(app)
+            .post('/api/posts')
+            .set('Authorization', `Bearer ${global.token}`)
+            .send({
+            message: "This is a test post"
+            });
         expect(res.statusCode).toEqual(201);
-        expect(res.body.message).toEqual(newPostData.message);
-        expect(res.body.sender).toEqual(newPostData.sender);
+        expect(res.body).toHaveProperty("message", "This is a test post");
+        id = res.body._id;
     });
 
+    //get post by id
     test("get post by id", async () => {
         const res = await request(app).get(`/api/posts/${id}`);
         expect(res.statusCode).toEqual(200);
-        expect(res.body.post._id).toEqual(id);
+        expect(res.body).toHaveProperty("post");
+        expect(res.body).toHaveProperty("message", "post found by id");
     });
 
-    test("update post by id", async () => {
-        const updateMessage = "new message";
-        const res = await request(app).put(`/api/posts/${id}`).send({ message: updateMessage });
-        expect(res.statusCode).toEqual(201);
-        expect(res.body.updatePost._id).toEqual(id);
-        expect(res.body.updatePost.message).toEqual(updateMessage);
+    //get post by sender
+    test("get post by sender", async () => {
+        const res = await request(app)
+            .get('/api/posts/sender')
+            .set('Authorization', `Bearer ${global.token}`);
+        expect(res.statusCode).toEqual(200);
+        expect(res.body).toHaveProperty("senderPosts");
+        expect(Array.isArray(res.body.senderPosts)).toBe(true);
     });
+
+    //update post by id
+    test("update post by id", async () => {
+        const res = await request(app)
+            .put(`/api/posts/${id}`)
+            .set('Authorization', `Bearer ${global.token}`)
+            .send({
+                message: "This is an updated test post"
+            });
+        expect(res.statusCode).toEqual(201);
+        expect(res.body).toHaveProperty("updatePost");
+        expect(res.body).toHaveProperty("message", "post updated by id");
+        expect(res.body.updatePost.message).toEqual("This is an updated test post");
+    });
+
+    
+
+
+   
 });

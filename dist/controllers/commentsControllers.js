@@ -18,11 +18,12 @@ const commentsModel_1 = __importDefault(require("../models/commentsModel"));
 class PostController {
     constructor() {
         this.postComment = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { content, postId } = req.body;
+            const { content, postId, userId } = req.body;
             try {
                 const newComment = yield commentsModel_1.default.create({
                     content,
-                    postId: new mongoose_1.Types.ObjectId(postId)
+                    postId: new mongoose_1.Types.ObjectId(postId),
+                    ownerId: new mongoose_1.Types.ObjectId(userId)
                 });
                 if (newComment) {
                     (0, response_1.responseReturn)(res, 201, newComment);
@@ -40,7 +41,7 @@ class PostController {
             try {
                 const comment = yield commentsModel_1.default.findById(new mongoose_1.Types.ObjectId(commentId));
                 if (comment) {
-                    (0, response_1.responseReturn)(res, 200, comment.content);
+                    (0, response_1.responseReturn)(res, 200, comment);
                 }
                 else {
                     (0, response_1.responseReturn)(res, 400, { message: "problem with new comment" });
@@ -52,8 +53,12 @@ class PostController {
         });
         this.updateComment = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { commentId } = req.params;
-            const { content } = req.body;
+            const { content, userId } = req.body;
             try {
+                const comment = yield commentsModel_1.default.findById(new mongoose_1.Types.ObjectId(commentId));
+                if (comment.ownerId.toString() !== userId) {
+                    (0, response_1.responseReturn)(res, 400, { message: "you are not the owner of this comment" });
+                }
                 const updatedComment = yield commentsModel_1.default.findByIdAndUpdate(new mongoose_1.Types.ObjectId(commentId), { content: content }, { new: true });
                 if (updatedComment) {
                     (0, response_1.responseReturn)(res, 200, { updatedComment, message: "success" });
@@ -68,7 +73,12 @@ class PostController {
         });
         this.deleteComment = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { commentId } = req.params;
+            const { userId } = req.body;
             try {
+                const comment = yield commentsModel_1.default.findById(new mongoose_1.Types.ObjectId(commentId));
+                if (comment.ownerId.toString() !== userId) {
+                    (0, response_1.responseReturn)(res, 400, { message: "you are not the owner of this comment" });
+                }
                 yield commentsModel_1.default.findByIdAndDelete(new mongoose_1.Types.ObjectId(commentId));
                 (0, response_1.responseReturn)(res, 200, { message: "comment deleted successfully" });
             }
