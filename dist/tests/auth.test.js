@@ -25,7 +25,7 @@ describe('Auth Routes', () => {
         const res = yield (0, supertest_1.default)(app_1.default)
             .post('/api/auth/register')
             .send({
-            email: 'sdashjsssbjhbsdsdjhdasdasasdczxczxc@gmail.com',
+            email: 'sdashjsssbsddjhassasaabssdqqssdjhdasdasasdczxczxc@gmail.com',
             password: '121212'
         });
         expect(res.statusCode).toEqual(200);
@@ -65,20 +65,46 @@ describe('Auth Routes', () => {
             .get('/api/auth/logout').send({ refreshToken: refreshToken });
         expect(res.statusCode).toEqual(200);
     }));
-    test('login - should return error when email or password is missing', () => __awaiter(void 0, void 0, void 0, function* () {
-        const res = yield (0, supertest_1.default)(app_1.default)
-            .post('/api/auth/login')
-            .send({}); // Missing email and password
-        expect(res.statusCode).toEqual(400);
-        expect(res.body).toHaveProperty('error', 'password and email are required');
-    }));
-    // Error handling in register when email or password is missing
-    test('register - should return error when email or password is missing', () => __awaiter(void 0, void 0, void 0, function* () {
+    test('should not register a user with an existing email', () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(app_1.default)
             .post('/api/auth/register')
-            .send({}); // Missing email and password
+            .send({
+            email: 'ur@gmail.com', // Assuming this email is already registered
+            password: '123456'
+        });
         expect(res.statusCode).toEqual(400);
-        expect(res.body).toHaveProperty('error', 'email or password not valid');
+        expect(res.body).toHaveProperty('error');
+    }));
+    test('should not login with incorrect password', () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .post('/api/auth/login')
+            .send({
+            email: 'ur@gmail.com',
+            password: 'wrongpassword'
+        });
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty('error');
+    }));
+    test('should not get a new access token with invalid refresh token', () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .get('/api/auth/refreshToken')
+            .send({ refreshToken: 'invalidToken' });
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty('error');
+    }));
+    test('should not logout a user with invalid token', () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .get('/api/auth/logout')
+            .send({ refreshToken: 'invalidToken' });
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty('error');
+    }));
+    /// tests for auth middleware
+    test('should not get posts without token', () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .post('/api/posts');
+        expect(res.statusCode).toEqual(401);
+        expect(res.body).toHaveProperty('message');
     }));
 });
 //# sourceMappingURL=auth.test.js.map

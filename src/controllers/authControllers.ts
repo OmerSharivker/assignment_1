@@ -38,7 +38,7 @@ login = async (req: Request, res: Response): Promise<void> => {
       const {email, password} = req.body;
       if(!email || !password){
         responseReturn(res, 400, { error: "email or password not valid" });
-        return
+        return;
       }
       try {
          const userExists = await User.findOne({email});
@@ -97,7 +97,6 @@ refreshToken = async (req: Request, res: Response): Promise<void> => {
         } catch (error) {
             responseReturn(res, 500, { error: "Internal server error" });
         }
-
     }
 
 }

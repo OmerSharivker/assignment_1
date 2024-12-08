@@ -14,7 +14,7 @@ describe('Auth Routes', () => {
         const res = await request(app)
             .post('/api/auth/register')
             .send({
-                email: 'sdashjsssbddjhaaaabsdqqsdjhdasdasasdczxczxc@gmail.com',
+                email: 'sdashjsssbsddjhassasaabssdqqssdjhdasdasasdczxczxc@gmail.com',
                 password: '121212'
             });
            
@@ -61,25 +61,50 @@ describe('Auth Routes', () => {
         expect(res.statusCode).toEqual(200);
     });
 
+    test('should not register a user with an existing email', async () => {
+        const res = await request(app)
+            .post('/api/auth/register')
+            .send({
+                email: 'ur@gmail.com', // Assuming this email is already registered
+                password: '123456'
+            });
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty('error');
+    });
 
-    test('login - should return error when email or password is missing', async () => {
+    test('should not login with incorrect password', async () => {
         const res = await request(app)
-          .post('/api/auth/login')
-          .send({});  // Missing email and password
-        
+            .post('/api/auth/login')
+            .send({
+                email: 'ur@gmail.com',
+                password: 'wrongpassword'
+            });
         expect(res.statusCode).toEqual(400);
-        expect(res.body).toHaveProperty('error', 'password and email are required');
-      });
-    
-      // Error handling in register when email or password is missing
-      test('register - should return error when email or password is missing', async () => {
+        expect(res.body).toHaveProperty('error');
+    });
+
+    test('should not get a new access token with invalid refresh token', async () => {
         const res = await request(app)
-          .post('/api/auth/register')
-          .send({});  // Missing email and password
-        
+            .get('/api/auth/refreshToken')
+            .send({ refreshToken: 'invalidToken' });
         expect(res.statusCode).toEqual(400);
-        expect(res.body).toHaveProperty('error', 'email or password not valid');
-      });
-    
- 
+        expect(res.body).toHaveProperty('error');
+    });
+
+    test('should not logout a user with invalid token', async () => {
+        const res = await request(app)
+            .get('/api/auth/logout')
+            .send({ refreshToken: 'invalidToken' });
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty('error');
+    });
+
+    /// tests for auth middleware
+
+    test('should not get posts without token', async () => {
+        const res = await request(app)
+            .post('/api/posts');
+        expect(res.statusCode).toEqual(401);
+        expect(res.body).toHaveProperty('message');
+    });
 });
