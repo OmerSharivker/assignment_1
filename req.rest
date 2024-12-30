@@ -1,5 +1,5 @@
 ###
-GET http://localhost:4000/api/posts
+GET http://localhost:3000/api/posts
 
 ###
 GET http://localhost:4000/api/posts/sender
@@ -63,7 +63,7 @@ POST  http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "user@gmail.com",
+    "email": "example@gmail.com",
     "password": "123456"
 }
 
@@ -72,7 +72,8 @@ POST  http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-
+    "email": "example@gmail.com",
+    "password": "123456"
    
 }
 

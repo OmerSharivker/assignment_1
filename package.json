@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
- "test": "jest --coverage --detectOpenHandles --forceExit --no-watch dist/tests",
+    "test": "jest --coverage --detectOpenHandles --forceExit --no-watch dist/tests",
     "start": "node dist/server.js",
     "dev": "nodemon --watch src --exec ts-node src/server.ts",
     "build": "tsc",
@@ -19,6 +19,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
