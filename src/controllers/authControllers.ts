@@ -9,6 +9,7 @@ class authControllers {
 
 login = async (req: Request, res: Response): Promise<void> => {
     const {email,password} =req.body
+    
     if(!email || !password){
       responseReturn(res,400,{error : "password and email are required"})
     }
@@ -51,7 +52,7 @@ login = async (req: Request, res: Response): Promise<void> => {
          const user = await User.create({
             email,
             password : hashPassword,
-            userName
+            userName,
          });
          responseReturn(res,200, user);
          return;
