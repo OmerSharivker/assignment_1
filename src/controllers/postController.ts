@@ -3,6 +3,7 @@ import postModel from "../models/postModel";
 import { responseReturn } from "../utils/response";
 import { Types } from 'mongoose';
 import commentsModel from "../models/commentsModel";
+import userModel from "../models/userModel";
 
 class PostController {
     getAllPosts = async (req: Request, res: Response): Promise<void> => {
@@ -20,9 +21,12 @@ class PostController {
 
     savePost = async (req: Request, res: Response): Promise<void> => {
         const {userId}=req.body
-        console.log(userId)
         try {
-            const newPost = await postModel.create({content: req.body.content, title: req.body.title ,ownerId : userId});
+            const user = await userModel.findById(new Types.ObjectId(userId));
+            const  userName = user.userName;
+            const  img = user.image;
+            console.log(userName,img)
+            const newPost = await postModel.create({content: req.body.content, title: req.body.title ,ownerId : userId , userName , img});
             if (newPost) {
                 responseReturn(res, 201, newPost);
             } else {
@@ -83,19 +87,22 @@ class PostController {
     likePost = async (req: Request, res: Response): Promise<void> => {
         const { id } = req.params;
         const { userId } = req.body;
+       
         try {
             const post = await postModel.findById(new Types.ObjectId(id));
+        
             if (post.likes.includes(userId)) {
-                post.numLikes = post.numLikes - 1;
                 post.likes = post.likes.filter((like) => like.toString() !== userId);
+                post.numLikes = post.likes.length;
                 await post.save();
                 responseReturn(res, 200, { message: "post unliked" });
+               return;
             }
-            const likePost = await postModel.findByIdAndUpdate(new Types.ObjectId(id), { $push: { likes: userId } }, { new: true });
-            post.numLikes = post.numLikes + 1;
+            post.likes.push(userId);
+            post.numLikes = post.likes.length ;
             await post.save();
-            if (likePost) {
-                responseReturn(res, 200, { likePost, message: "post liked" });
+            if (post.likes) {
+                responseReturn(res, 200, {post, message: "post liked" });
             } else {
                 responseReturn(res, 400, { message: "post not liked" });
             }
@@ -119,6 +126,7 @@ class PostController {
                 responseReturn(res, 400, { message: "post not deleted" });
             }
         } catch (error) {
+
             responseReturn(res, 500, { message: "problem with delete post" });
         }
     }

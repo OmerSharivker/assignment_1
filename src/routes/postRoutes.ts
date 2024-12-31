@@ -131,14 +131,19 @@ const router: Router = express.Router();
 router.get('/posts', postController.getAllPosts);
 
 router.get('/posts/sender', authMiddleware ,postController.getPostsBySender);
+ 
 
 router.post('/posts', authMiddleware, postController.savePost);
 
-router.post('posts/like/:id', authMiddleware, postController.likePost);
+
+router.put('/posts/like/:id',authMiddleware, postController.likePost);
+
 
 router.get('/posts/:id', postController.getPostById);
 
+
 router.put('/posts/:id', authMiddleware, postController.updateById);
+
 
 router.delete('/posts/:id', authMiddleware, postController.deletePost);
 
