@@ -6,10 +6,12 @@ GET http://localhost:4000/api/posts/sender
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxMjc3OSwiZXhwIjoxNzMzNDE2Mzc5fQ.f1WtONbQFvgo2iFUeJNH9xSz47zswdFO35pXj13qDpQ
 ###
 POST  http://localhost:3000/api/posts
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2RlZDFjNGIzNDc0Yjk2ODE0OTFkNiIsImlhdCI6MTczMzQ5NTg1NiwiZXhwIjoxNzMzNDk5NDU2fQ.aMruEkys6ow54BxVm6Gf4v4dJrucaEAREPbwgofAXNA
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWQ3MTExMGQ4M2Y2YzUxNWZjNjQ4NiIsImlhdCI6MTczNTYzMDc2OCwiZXhwIjoxNzM1NjM0MzY4fQ.Ib_yBD7x25rqoRez0Bfk5D1yPrWJszp8MyUvbi-bseY
 Content-Type: application/json
 
 {
+    "message": "this is the first message",
+    "ownerId" : "675d71110d83f6c515fc6486"
     
 }
 
