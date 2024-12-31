@@ -13,7 +13,15 @@ const commentSchema =new Schema({
     ownerId:{
         type: Schema.ObjectId,
         required :true
-    }
+    },
+    userName:{
+        type: String,
+        required :true
+    },
+    img:{
+        type: String,
+        required :true
+    },
 })
 
 export default model('comment', commentSchema);

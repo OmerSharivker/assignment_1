@@ -4,15 +4,22 @@ import { Types } from 'mongoose';
 import {responseReturn}  from '../utils/response';
 import commentsModel from '../models/commentsModel';
 import postModel from '../models/postModel';
+import userModel from '../models/userModel';
 
 class PostController {
+   
    postComment = async (req: Request, res: Response): Promise<void> => {
       const { content, postId, userId } = req.body;
       try {
+         const user = await userModel.findById(new Types.ObjectId(userId));
+         const  userName = user.userName;
+         const  img = user.image;
          const newComment = await commentsModel.create({
             content,
             postId: new Types.ObjectId(postId),
-            ownerId: new Types.ObjectId(userId)
+            ownerId: new Types.ObjectId(userId),
+            userName,
+            img  
          });
          if (newComment) {
             await postModel.findByIdAndUpdate(new Types.ObjectId(postId), { $inc : { comments: 1 } }, { new: true });

@@ -25,7 +25,7 @@ class PostController {
             const user = await userModel.findById(new Types.ObjectId(userId));
             const  userName = user.userName;
             const  img = user.image;
-            console.log(userName,img)
+
             const newPost = await postModel.create({content: req.body.content, title: req.body.title ,ownerId : userId , userName , img});
             if (newPost) {
                 responseReturn(res, 201, newPost);
