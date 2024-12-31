@@ -10,6 +10,9 @@ const postSchema =new Schema({
         required :true
     },
     likes:{
+        type: [Schema.ObjectId],
+    },
+    numLikes:{
         type: Number,
         default:0
     },

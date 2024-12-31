@@ -35,7 +35,7 @@ login = async (req: Request, res: Response): Promise<void> => {
 }
 
    register = async (req: Request, res: Response): Promise<void> => {
-      const {email, password} = req.body;
+      const {email, password, userName} = req.body;
       if(!email || !password){
         responseReturn(res, 400, { error: "email or password not valid" });
         return;
@@ -51,6 +51,7 @@ login = async (req: Request, res: Response): Promise<void> => {
          const user = await User.create({
             email,
             password : hashPassword,
+            userName
          });
          responseReturn(res,200, user);
          return;

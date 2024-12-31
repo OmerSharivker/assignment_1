@@ -2,10 +2,6 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 
 const UserSchema =new Schema({
-    userName:{
-        type: String,
-        required :true,
-    },
     email:{
         type: String,
         required :true,
@@ -21,6 +17,10 @@ const UserSchema =new Schema({
     image:{
         type: String,
         default: ''
+    },
+    userName:{
+        type: String,
+        required :true,
     }
 })
 

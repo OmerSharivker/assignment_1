@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import {responseReturn}  from '../utils/response';
 import commentsModel from '../models/commentsModel';
+import postModel from '../models/postModel';
 
 class PostController {
    postComment = async (req: Request, res: Response): Promise<void> => {
@@ -14,6 +15,7 @@ class PostController {
             ownerId: new Types.ObjectId(userId)
          });
          if (newComment) {
+            await postModel.findByIdAndUpdate(new Types.ObjectId(postId), { $inc : { comments: 1 } }, { new: true });
             responseReturn(res, 201, newComment);
          } else {
             responseReturn(res, 400, { message: "problem with new comment" });
@@ -69,6 +71,7 @@ class PostController {
             responseReturn(res, 400, { message: "you are not the owner of this comment" });
          }
          await commentsModel.findByIdAndDelete(new Types.ObjectId(commentId));
+         await postModel.findByIdAndUpdate(comment.postId, { $inc: { comments: -1 } });
          responseReturn(res, 200, { message: "comment deleted successfully" });
       } catch (error) {
          responseReturn(res, 400, { message: "internal server error" });
