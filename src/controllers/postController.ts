@@ -95,7 +95,7 @@ class PostController {
                 post.likes = post.likes.filter((like) => like.toString() !== userId);
                 post.numLikes = post.likes.length;
                 await post.save();
-                responseReturn(res, 200, { message: "post unliked" });
+                responseReturn(res, 200, {post, message: "post unliked" });
                return;
             }
             post.likes.push(userId);

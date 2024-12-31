@@ -1,16 +1,16 @@
 ###
-GET http://localhost:3000/api/posts
+GET http://localhost:4000/api/posts
 
 ###
 GET http://localhost:4000/api/posts/sender
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxMjc3OSwiZXhwIjoxNzMzNDE2Mzc5fQ.f1WtONbQFvgo2iFUeJNH9xSz47zswdFO35pXj13qDpQ
 ###
-POST  http://localhost:3000/api/posts
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzNkYjMxNTQ2ZWFkMTdhMzc0NjNjYiIsImlhdCI6MTczNTY0NjAwNSwiZXhwIjoxNzM1NjQ5NjA1fQ.7AqndNVF5m9zY07BQ63pyGsOWio_20TZQ3OJLs0KrUg
+POST  http://localhost:4000/api/posts
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzNkY2VhMGUyNTBhYWRiMTI3YTE2NyIsImlhdCI6MTczNTY0NjQ1NywiZXhwIjoxNzM1NjUwMDU3fQ.74fF9ui9We6jpRLiryzzzu3vPn7AFVUvwbHB3Ja8GdY
 Content-Type: application/json
 
 {
-    "content": "this is the 2 message",
+    "content": "this is the 3 message",
     "title": "this is title"
 }
 
@@ -64,7 +64,7 @@ GET http://localhost:3000/api/comment/get-all-comments/6735e5433fc7b7ca4f640709
 
 
 ###
-POST  http://localhost:3000/api/auth/login
+POST  http://localhost:4000/api/auth/login
 Content-Type: application/json
 
 {
@@ -73,7 +73,7 @@ Content-Type: application/json
 }
 
 ###
-POST  http://localhost:3000/api/auth/register
+POST  http://localhost:4000/api/auth/register
 Content-Type: application/json
 
 {
