@@ -38,14 +38,21 @@ class PostController {
             try {
                 const user = yield userModel_1.default.findById(new mongoose_1.Types.ObjectId(userId));
                 const userName = user.userName;
-                const img = user.image;
-                const newPost = yield postModel_1.default.create({ content: req.body.content, title: req.body.title, ownerId: userId, userName, img });
+                const userImg = user.image;
+                const postImg = req.body.img;
+                const newPost = yield postModel_1.default.create({
+                    content: req.body.content,
+                    title: req.body.title,
+                    ownerId: userId,
+                    userName,
+                    userImg,
+                    postImg
+                });
                 if (newPost) {
-                    (0, response_1.responseReturn)(res, 201, newPost);
+                    (0, response_1.responseReturn)(res, 201, { message: "new post created" });
                 }
                 else {
                     (0, response_1.responseReturn)(res, 400, { message: "new post not working" });
-                    console.log("new post");
                 }
             }
             catch (error) {
@@ -146,6 +153,19 @@ class PostController {
             }
             catch (error) {
                 (0, response_1.responseReturn)(res, 500, { message: "problem with delete post" });
+            }
+        });
+        this.savePhoto = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!req.file) {
+                    (0, response_1.responseReturn)(res, 400, { message: "file not found" });
+                    return;
+                }
+                const fileUrl = `/uploads/${req.file.originalname}`; // Fixed template string syntax
+                (0, response_1.responseReturn)(res, 200, { url: fileUrl });
+            }
+            catch (error) {
+                (0, response_1.responseReturn)(res, 500, { message: "Error uploading file" });
             }
         });
     }
