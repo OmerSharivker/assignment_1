@@ -18,8 +18,9 @@ Content-Type: application/json
 GET http://localhost:3000/api/posts/677417da1f0a443fe0778e86
 
 ###
-PUT http://localhost:3000/api/posts/like/6773da72aeb2d8fb6de88936
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzY0ODNjMWYwYTQ0M2ZlMDc3OGVkZSIsImlhdCI6MTczNTgwNjQ1NCwiZXhwIjoxNzM1ODEwMDU0fQ.YcpALxMgb9pncqTQCeBsFEuIunlFkg-h6vjmpPD9aRg
+PUT http://localhost:3000/api/posts/like/6776c05de55df19329381d0a
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZjMDRjZTU1ZGYxOTMyOTM4MWQwMyIsImlhdCI6MTczNTgzNjQxNCwiZXhwIjoxNzM1ODQwMDE0fQ.xjx_wdgVSF71xIZy0vpQh_t5EZOT0LO9mQKt8bGofZ8
+
 
 ###
 PUT  http://localhost:3000/api/posts/6773da72aeb2d8fb6de88936

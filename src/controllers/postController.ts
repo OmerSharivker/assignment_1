@@ -29,7 +29,7 @@ class PostController {
             const  userName = user.userName;
             const  userImg = user.image;
             const postImg = req.body.img;
-
+ 
             const newPost = await postModel.create({
                 content: req.body.content,
                 title: req.body.title ,
@@ -84,10 +84,13 @@ class PostController {
             const post = await postModel.findById(new Types.ObjectId(id));
             if(userId !== post.ownerId.toString()){
                 responseReturn(res, 400, { message: "you are not the owner of this post" });
+                return;
             }
-            const updatePost = await postModel.findByIdAndUpdate(new Types.ObjectId(id), { content, title } , { new: true });
+            const postImg = req.body.img;
+            const updatePost = await postModel.findByIdAndUpdate(new Types.ObjectId(id), { content, title , postImg } , { new: true });
             if (updatePost) {
                 responseReturn(res, 201, { updatePost, message: "post updated by id" });
+                return;
             } else {
                 responseReturn(res, 400, { message: "post not updated by id" });
             }
@@ -129,11 +132,13 @@ class PostController {
             const post = await postModel.findById(new Types.ObjectId(id));
             if(post.ownerId.toString() !== userId){
                 responseReturn(res, 400, { message: "you are not the owner of this post" });
+                return;
             }
             const deletePost = await postModel.findByIdAndDelete(new Types.ObjectId(id));
             if (deletePost) {
                 await commentsModel.deleteMany({ postId: new Types.ObjectId(id) });
                 responseReturn(res, 200, { message: "post deleted" });
+                return;
             } else {
                 responseReturn(res, 400, { message: "post not deleted" });
             }

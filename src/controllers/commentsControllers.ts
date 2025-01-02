@@ -7,7 +7,7 @@ import postModel from '../models/postModel';
 import userModel from '../models/userModel';
 
 class PostController {
-   
+
    postComment = async (req: Request, res: Response): Promise<void> => {
       const { content, postId, userId } = req.body;
       try {
@@ -53,6 +53,7 @@ class PostController {
          const comment = await commentsModel.findById(new Types.ObjectId(commentId));
          if (comment.ownerId.toString() !== userId) {
             responseReturn(res, 400, { message: "you are not the owner of this comment" });
+            return;
          }
          const updatedComment = await commentsModel.findByIdAndUpdate(
             new Types.ObjectId(commentId),
@@ -61,8 +62,10 @@ class PostController {
          );
          if (updatedComment) {
             responseReturn(res, 200, { updatedComment, message: "success" });
+            return;
          } else {
             responseReturn(res, 400, { message: "problem with new" });
+            return;
          }
       } catch (error) {
          responseReturn(res, 400, { message: "internal server error" });
@@ -76,10 +79,12 @@ class PostController {
          const comment = await commentsModel.findById(new Types.ObjectId(commentId));
          if(comment.ownerId.toString() !== userId) {
             responseReturn(res, 400, { message: "you are not the owner of this comment" });
+            return;
          }
          await commentsModel.findByIdAndDelete(new Types.ObjectId(commentId));
          await postModel.findByIdAndUpdate(comment.postId, { $inc: { comments: -1 } });
          responseReturn(res, 200, { message: "comment deleted successfully" });
+         return;
       } catch (error) {
          responseReturn(res, 400, { message: "internal server error" });
       }

@@ -102,12 +102,16 @@ refreshToken = async (req: Request, res: Response): Promise<void> => {
     }
 
     getUserInfo = async (req: Request, res: Response): Promise<void> => {
-        const {id} = req.body;
-        const user = await User.findById(new Types.ObjectId(id));
+        const {userId} = req.body;
+    
+        const user = await User.findById(new Types.ObjectId(userId));
+      
         if(user){
             const image = user.image ? user.image : null;
             const userName = user.userName ? user.userName : null;
-            responseReturn(res,200,{image, userName});
+            const userId = user._id.toString();
+            responseReturn(res,200,{image, userName , userId});
+            return;
         }
         else{
             responseReturn(res,400,{error : "user not found"});
