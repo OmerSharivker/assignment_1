@@ -83,10 +83,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 const express_1 = __importDefault(require("express"));
 const authControllers_1 = __importDefault(require("../controllers/authControllers"));
+const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware"));
 const router = express_1.default.Router();
 router.post('/auth/login', authControllers_1.default.login);
 router.post('/auth/register', authControllers_1.default.register);
 router.get('/auth/refreshToken', authControllers_1.default.refreshToken);
-router.get('/auth/logout', authControllers_1.default.logout);
+router.post('/auth/logout', authControllers_1.default.logout);
+router.get('/auth/user', authMiddleware_1.default, authControllers_1.default.getUserInfo);
 exports.default = router;
 //# sourceMappingURL=authRoutes.js.map

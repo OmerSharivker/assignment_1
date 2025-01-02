@@ -10,7 +10,7 @@ import cors from 'cors'; // Import the cors package
 require('dotenv').config();
 
 const app = express();
-
+app.use(express.static('public'));
 // Enable CORS for all routes
 app.use(cors());
 
