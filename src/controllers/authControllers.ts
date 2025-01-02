@@ -28,6 +28,7 @@ login = async (req: Request, res: Response): Promise<void> => {
       const refreshToken = await createToken({ id: user._id }, "7d");
       user.refreshTokens = user.refreshTokens ? [...(user.refreshTokens as string[]), refreshToken] : [refreshToken];
       await user.save();
+      
       responseReturn(res,200,{refreshToken, accessToken, message : "login ok"})
     
   } catch (error) {
