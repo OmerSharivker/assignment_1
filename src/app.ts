@@ -10,13 +10,15 @@ import cors from 'cors'; // Import the cors package
 require('dotenv').config();
 
 const app = express();
-
+app.use(express.static('public'));
 // Enable CORS for all routes
 app.use(cors());
 
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
 
 app.get('/', (req, res) => {
     res.send("hello");

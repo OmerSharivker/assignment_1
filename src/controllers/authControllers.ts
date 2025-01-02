@@ -28,7 +28,7 @@ login = async (req: Request, res: Response): Promise<void> => {
       const refreshToken = await createToken({ id: user._id }, "7d");
       user.refreshTokens = user.refreshTokens ? [...(user.refreshTokens as string[]), refreshToken] : [refreshToken];
       await user.save();
-      responseReturn(res,200,{refreshToken, accessToken, message : "login ok"})
+      responseReturn(res,200,{refreshToken, accessToken, message : "login ok", user})
     
   } catch (error) {
       responseReturn(res,500,{error : "internal server error"})
@@ -98,6 +98,19 @@ refreshToken = async (req: Request, res: Response): Promise<void> => {
             responseReturn(res, 200, { message: "Logout successful" });
         } catch (error) {
             responseReturn(res, 500, { error: "Internal server error" });
+        }
+    }
+
+    getUserInfo = async (req: Request, res: Response): Promise<void> => {
+        const {id} = req.body;
+        const user = await User.findById(new Types.ObjectId(id));
+        if(user){
+            const image = user.image ? user.image : null;
+            const userName = user.userName ? user.userName : null;
+            responseReturn(res,200,{image, userName});
+        }
+        else{
+            responseReturn(res,400,{error : "user not found"});
         }
     }
 

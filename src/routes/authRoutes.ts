@@ -82,12 +82,14 @@
  */
 import express, { Request, Response, Router } from 'express';
 import authControllers from '../controllers/authControllers';
+import authMiddleware from '../middleware/authMiddleware';
 
 const router: Router = express.Router();
 
 router.post('/auth/login', authControllers.login);
 router.post('/auth/register', authControllers.register);
 router.get('/auth/refreshToken', authControllers.refreshToken);
-router.get('/auth/logout',  authControllers.logout);
+router.post('/auth/logout',  authControllers.logout);
+router.get('/auth/user', authMiddleware, authControllers.getUserInfo);
 
 export default router;

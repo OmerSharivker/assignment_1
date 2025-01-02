@@ -92,11 +92,11 @@ Content-Type: application/json
 }
 
 ###
-GET  http://localhost:4000/api/auth/logout
+POST  http://localhost:4000/api/auth/logout
 Content-Type: application/json
 
 {
-   "refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxNDMxNSwiZXhwIjoxNzM0MDE5MTE1fQ.HyIQk3wr-pjP_bRxjSTQ1WcK1H8UaTynSiphXff0wWQ" 
+   "refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzY3ZDYzYTM4NjhlMDI2MTdjODBmYSIsImlhdCI6MTczNTgxODc4NiwiZXhwIjoxNzM2NDIzNTg2fQ._OZriOMXUSVboYXqQFWBLwNk-6eJ-lWvvA-De2PLSSE" 
 }
 ###
 GET  http://localhost:3000/api/auth/logout

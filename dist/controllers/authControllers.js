@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = require("mongoose");
 const response_1 = require("../utils/response");
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -38,14 +39,14 @@ class authControllers {
                 const refreshToken = yield (0, token_1.createToken)({ id: user._id }, "7d");
                 user.refreshTokens = user.refreshTokens ? [...user.refreshTokens, refreshToken] : [refreshToken];
                 yield user.save();
-                (0, response_1.responseReturn)(res, 200, { refreshToken, accessToken, message: "login ok" });
+                (0, response_1.responseReturn)(res, 200, { refreshToken, accessToken, message: "login ok", user });
             }
             catch (error) {
                 (0, response_1.responseReturn)(res, 500, { error: "internal server error" });
             }
         });
         this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { email, password } = req.body;
+            const { email, password, userName } = req.body;
             if (!email || !password) {
                 (0, response_1.responseReturn)(res, 400, { error: "email or password not valid" });
                 return;
@@ -61,6 +62,7 @@ class authControllers {
                 const user = yield userModel_1.default.create({
                     email,
                     password: hashPassword,
+                    userName,
                 });
                 (0, response_1.responseReturn)(res, 200, user);
                 return;
@@ -107,6 +109,18 @@ class authControllers {
             }
             catch (error) {
                 (0, response_1.responseReturn)(res, 500, { error: "Internal server error" });
+            }
+        });
+        this.getUserInfo = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.body;
+            const user = yield userModel_1.default.findById(new mongoose_1.Types.ObjectId(id));
+            if (user) {
+                const image = user.image ? user.image : null;
+                const userName = user.userName ? user.userName : null;
+                (0, response_1.responseReturn)(res, 200, { image, userName });
+            }
+            else {
+                (0, response_1.responseReturn)(res, 400, { error: "user not found" });
             }
         });
     }

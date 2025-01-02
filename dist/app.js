@@ -11,9 +11,13 @@ const commentRoutes_1 = __importDefault(require("./routes/commentRoutes"));
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swaggerConfig_1 = __importDefault(require("./swaggerConfig"));
+const cors_1 = __importDefault(require("cors")); // Import the cors package
 require('dotenv').config();
 const app = (0, express_1.default)();
-//middleware
+app.use(express_1.default.static('public'));
+// Enable CORS for all routes
+app.use((0, cors_1.default)());
+// Middleware
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
