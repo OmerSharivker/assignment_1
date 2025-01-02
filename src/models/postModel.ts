@@ -28,7 +28,11 @@ const postSchema =new Schema({
         type: String,
         required :true
     },
-    img:{
+    userImg:{
+        type: String,
+        required :true
+    },
+    postImg:{
         type: String,
         required :true
     },

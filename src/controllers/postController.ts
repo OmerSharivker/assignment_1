@@ -5,6 +5,9 @@ import { Types } from 'mongoose';
 import commentsModel from "../models/commentsModel";
 import userModel from "../models/userModel";
 
+
+
+
 class PostController {
     getAllPosts = async (req: Request, res: Response): Promise<void> => {
         try {
@@ -24,14 +27,23 @@ class PostController {
         try {
             const user = await userModel.findById(new Types.ObjectId(userId));
             const  userName = user.userName;
-            const  img = user.image;
+            const  userImg = user.image;
+            const postImg = req.body.img;
 
-            const newPost = await postModel.create({content: req.body.content, title: req.body.title ,ownerId : userId , userName , img});
+            const newPost = await postModel.create({
+                content: req.body.content,
+                title: req.body.title ,
+                ownerId : userId , 
+                userName ,
+                userImg,
+                postImg
+
+            });
             if (newPost) {
-                responseReturn(res, 201, newPost);
+                responseReturn(res, 201, { message: "new post created" });
             } else {
                 responseReturn(res, 400, { message: "new post not working" });
-                console.log("new post");
+                
             }
         } catch (error) {
             responseReturn(res, 500, { message: "unknown error" });
@@ -130,6 +142,21 @@ class PostController {
             responseReturn(res, 500, { message: "problem with delete post" });
         }
     }
+ 
+
+savePhoto = async (req: Request, res: Response): Promise<void> => {
+    try {
+        if (!req.file) {
+            responseReturn(res, 400, { message: "file not found" });
+            return;
+        }
+        const fileUrl = `/uploads/${req.file.originalname}`;  // Fixed template string syntax
+        responseReturn(res, 200, { url: fileUrl });
+    } catch (error) {
+        responseReturn(res, 500, { message: "Error uploading file" });
+    }
+}
+
 }
 
 export default new PostController();
