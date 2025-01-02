@@ -15,17 +15,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const response_1 = require("../utils/response");
 const commentsModel_1 = __importDefault(require("../models/commentsModel"));
+const postModel_1 = __importDefault(require("../models/postModel"));
+const userModel_1 = __importDefault(require("../models/userModel"));
 class PostController {
     constructor() {
         this.postComment = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { content, postId, userId } = req.body;
             try {
+                const user = yield userModel_1.default.findById(new mongoose_1.Types.ObjectId(userId));
+                const userName = user.userName;
+                const img = user.image;
                 const newComment = yield commentsModel_1.default.create({
                     content,
                     postId: new mongoose_1.Types.ObjectId(postId),
-                    ownerId: new mongoose_1.Types.ObjectId(userId)
+                    ownerId: new mongoose_1.Types.ObjectId(userId),
+                    userName,
+                    img
                 });
                 if (newComment) {
+                    yield postModel_1.default.findByIdAndUpdate(new mongoose_1.Types.ObjectId(postId), { $inc: { comments: 1 } }, { new: true });
                     (0, response_1.responseReturn)(res, 201, newComment);
                 }
                 else {
@@ -80,6 +88,7 @@ class PostController {
                     (0, response_1.responseReturn)(res, 400, { message: "you are not the owner of this comment" });
                 }
                 yield commentsModel_1.default.findByIdAndDelete(new mongoose_1.Types.ObjectId(commentId));
+                yield postModel_1.default.findByIdAndUpdate(comment.postId, { $inc: { comments: -1 } });
                 (0, response_1.responseReturn)(res, 200, { message: "comment deleted successfully" });
             }
             catch (error) {

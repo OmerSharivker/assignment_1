@@ -45,7 +45,7 @@ class authControllers {
             }
         });
         this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { email, password } = req.body;
+            const { email, password, userName } = req.body;
             if (!email || !password) {
                 (0, response_1.responseReturn)(res, 400, { error: "email or password not valid" });
                 return;
@@ -61,6 +61,7 @@ class authControllers {
                 const user = yield userModel_1.default.create({
                     email,
                     password: hashPassword,
+                    userName,
                 });
                 (0, response_1.responseReturn)(res, 200, user);
                 return;
