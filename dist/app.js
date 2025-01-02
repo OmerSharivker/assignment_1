@@ -12,7 +12,7 @@ const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swaggerConfig_1 = __importDefault(require("./swaggerConfig"));
 const cors_1 = __importDefault(require("cors")); // Import the cors package
-const cors_1 = __importDefault(require("cors")); // Import the cors package
+
 require('dotenv').config();
 const app = (0, express_1.default)();
 app.use(express_1.default.static('public'));
