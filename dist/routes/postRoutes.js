@@ -126,6 +126,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const postController_1 = __importDefault(require("../controllers/postController"));
 const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware"));
+const multerMiddleware_1 = __importDefault(require("../middleware/multerMiddleware"));
 const router = express_1.default.Router();
 router.get('/posts', postController_1.default.getAllPosts);
 router.get('/posts/sender', authMiddleware_1.default, postController_1.default.getPostsBySender);
@@ -134,5 +135,6 @@ router.put('/posts/like/:id', authMiddleware_1.default, postController_1.default
 router.get('/posts/:id', postController_1.default.getPostById);
 router.put('/posts/:id', authMiddleware_1.default, postController_1.default.updateById);
 router.delete('/posts/:id', authMiddleware_1.default, postController_1.default.deletePost);
+router.post('/posts/upload', authMiddleware_1.default, multerMiddleware_1.default, postController_1.default.savePhoto);
 exports.default = router;
 //# sourceMappingURL=postRoutes.js.map

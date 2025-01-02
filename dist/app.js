@@ -21,6 +21,7 @@ app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 // Serve static files from the "public" directory
 app.use(express_1.default.static('public'));
+app.use('/uploads', express_1.default.static('uploads'));
 app.get('/', (req, res) => {
     res.send("hello");
 });
