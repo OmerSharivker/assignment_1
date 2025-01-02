@@ -13,7 +13,15 @@ const commentSchema = new mongoose_1.Schema({
     ownerId: {
         type: mongoose_1.Schema.ObjectId,
         required: true
-    }
+    },
+    userName: {
+        type: String,
+        required: true
+    },
+    img: {
+        type: String,
+        required: true
+    },
 });
 exports.default = (0, mongoose_1.model)('comment', commentSchema);
 //# sourceMappingURL=commentsModel.js.map

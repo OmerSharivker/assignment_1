@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const postModel_1 = __importDefault(require("../models/postModel"));
 const response_1 = require("../utils/response");
 const mongoose_1 = require("mongoose");
+const commentsModel_1 = __importDefault(require("../models/commentsModel"));
+const userModel_1 = __importDefault(require("../models/userModel"));
 class PostController {
     constructor() {
         this.getAllPosts = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -34,7 +36,10 @@ class PostController {
         this.savePost = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { userId } = req.body;
             try {
-                const newPost = yield postModel_1.default.create({ message: req.body.message, ownerId: userId });
+                const user = yield userModel_1.default.findById(new mongoose_1.Types.ObjectId(userId));
+                const userName = user.userName;
+                const img = user.image;
+                const newPost = yield postModel_1.default.create({ content: req.body.content, title: req.body.title, ownerId: userId, userName, img });
                 if (newPost) {
                     (0, response_1.responseReturn)(res, 201, newPost);
                 }
@@ -78,13 +83,13 @@ class PostController {
         });
         this.updateById = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const { message, userId } = req.body;
+            const { content, title, userId } = req.body;
             try {
                 const post = yield postModel_1.default.findById(new mongoose_1.Types.ObjectId(id));
                 if (userId !== post.ownerId.toString()) {
                     (0, response_1.responseReturn)(res, 400, { message: "you are not the owner of this post" });
                 }
-                const updatePost = yield postModel_1.default.findByIdAndUpdate(new mongoose_1.Types.ObjectId(id), { message: message }, { new: true });
+                const updatePost = yield postModel_1.default.findByIdAndUpdate(new mongoose_1.Types.ObjectId(id), { content, title }, { new: true });
                 if (updatePost) {
                     (0, response_1.responseReturn)(res, 201, { updatePost, message: "post updated by id" });
                 }
@@ -94,6 +99,53 @@ class PostController {
             }
             catch (error) {
                 (0, response_1.responseReturn)(res, 500, { message: "problem with updated by id" });
+            }
+        });
+        this.likePost = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const { userId } = req.body;
+            try {
+                const post = yield postModel_1.default.findById(new mongoose_1.Types.ObjectId(id));
+                if (post.likes.includes(userId)) {
+                    post.likes = post.likes.filter((like) => like.toString() !== userId);
+                    post.numLikes = post.likes.length;
+                    yield post.save();
+                    (0, response_1.responseReturn)(res, 200, { post, message: "post unliked" });
+                    return;
+                }
+                post.likes.push(userId);
+                post.numLikes = post.likes.length;
+                yield post.save();
+                if (post.likes) {
+                    (0, response_1.responseReturn)(res, 200, { post, message: "post liked" });
+                }
+                else {
+                    (0, response_1.responseReturn)(res, 400, { message: "post not liked" });
+                }
+            }
+            catch (error) {
+                (0, response_1.responseReturn)(res, 500, { message: "problem with like post" });
+            }
+        });
+        this.deletePost = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const { userId } = req.body;
+            try {
+                const post = yield postModel_1.default.findById(new mongoose_1.Types.ObjectId(id));
+                if (post.ownerId.toString() !== userId) {
+                    (0, response_1.responseReturn)(res, 400, { message: "you are not the owner of this post" });
+                }
+                const deletePost = yield postModel_1.default.findByIdAndDelete(new mongoose_1.Types.ObjectId(id));
+                if (deletePost) {
+                    yield commentsModel_1.default.deleteMany({ postId: new mongoose_1.Types.ObjectId(id) });
+                    (0, response_1.responseReturn)(res, 200, { message: "post deleted" });
+                }
+                else {
+                    (0, response_1.responseReturn)(res, 400, { message: "post not deleted" });
+                }
+            }
+            catch (error) {
+                (0, response_1.responseReturn)(res, 500, { message: "problem with delete post" });
             }
         });
     }

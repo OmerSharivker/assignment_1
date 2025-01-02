@@ -130,7 +130,9 @@ const router = express_1.default.Router();
 router.get('/posts', postController_1.default.getAllPosts);
 router.get('/posts/sender', authMiddleware_1.default, postController_1.default.getPostsBySender);
 router.post('/posts', authMiddleware_1.default, postController_1.default.savePost);
+router.put('/posts/like/:id', authMiddleware_1.default, postController_1.default.likePost);
 router.get('/posts/:id', postController_1.default.getPostById);
 router.put('/posts/:id', authMiddleware_1.default, postController_1.default.updateById);
+router.delete('/posts/:id', authMiddleware_1.default, postController_1.default.deletePost);
 exports.default = router;
 //# sourceMappingURL=postRoutes.js.map
