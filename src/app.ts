@@ -13,7 +13,7 @@ const app = express();
 app.use(express.static('public'));
 // Enable CORS for all routes
 app.use(cors());
-
+const omer="omer";
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
