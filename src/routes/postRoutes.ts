@@ -125,6 +125,8 @@
 import express, { Request, Response, Router } from 'express';
 import postController from "../controllers/postController";
 import authMiddleware from '../middleware/authMiddleware';
+import multerMiddleware from '../middleware/multerMiddleware';
+
 
 const router: Router = express.Router();
 
@@ -146,5 +148,7 @@ router.put('/posts/:id', authMiddleware, postController.updateById);
 
 
 router.delete('/posts/:id', authMiddleware, postController.deletePost);
+
+router.post('/posts/upload', authMiddleware ,  multerMiddleware , postController.savePhoto);
 
 export default router;

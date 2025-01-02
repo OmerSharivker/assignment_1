@@ -5,25 +5,24 @@ GET http://localhost:4000/api/posts
 GET http://localhost:4000/api/posts/sender
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxMjc3OSwiZXhwIjoxNzMzNDE2Mzc5fQ.f1WtONbQFvgo2iFUeJNH9xSz47zswdFO35pXj13qDpQ
 ###
-POST  http://localhost:4000/api/posts
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzNkY2VhMGUyNTBhYWRiMTI3YTE2NyIsImlhdCI6MTczNTY0NjQ1NywiZXhwIjoxNzM1NjUwMDU3fQ.74fF9ui9We6jpRLiryzzzu3vPn7AFVUvwbHB3Ja8GdY
+POST  http://localhost:3000/api/posts
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzQxNzI5MWYwYTQ0M2ZlMDc3OGU4MSIsImlhdCI6MTczNTY2MTM2NSwiZXhwIjoxNzM1NjY0OTY1fQ.PkYGBZP0LMHdDnrChdh5TefuUnQFs4WbsZLGymtRWDw
 Content-Type: application/json
 
 {
-    "content": "this is the 3 message",
+    "content": "this is גדכגדכגדכגדmessage",
     "title": "this is title"
 }
 
 ###
-GET http://localhost:3000/api/posts/6773caa89827a6d6117f2231
+GET http://localhost:3000/api/posts/677417da1f0a443fe0778e86
 
 ###
-PUT http://localhost:3000/api/posts/like/6773caa89827a6d6117f2231
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzNjZjczYjc5MjAyMTYzNDk4MjYyMSIsImlhdCI6MTczNTY0NDMwMywiZXhwIjoxNzM1NjQ3OTAzfQ.lHuZoiTk4YdN2CjkQUIu2Xf8P_ijKt_g3ZfCg4uFRuo
-
+PUT http://localhost:3000/api/posts/like/6773da72aeb2d8fb6de88936
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzY0ODNjMWYwYTQ0M2ZlMDc3OGVkZSIsImlhdCI6MTczNTgwNjQ1NCwiZXhwIjoxNzM1ODEwMDU0fQ.YcpALxMgb9pncqTQCeBsFEuIunlFkg-h6vjmpPD9aRg
 
 ###
-PUT  http://localhost:3000/api/posts/6752b5852d1189b3b2f6dd94
+PUT  http://localhost:3000/api/posts/6773da72aeb2d8fb6de88936
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFkODQ5MzhlMjc1NjQyNmUwM2UwZiIsImlhdCI6MTczMzQ3MjU4OCwiZXhwIjoxNzMzNDc2MTg4fQ.YW6rZLe2E3QUwd8ojOKASv5TJGVBFePygNMK0zJJxeo
 Content-Type: application/json
 
@@ -35,16 +34,17 @@ Content-Type: application/json
 ////////////////////////////////////////////// comments \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ###
 POST  http://localhost:3000/api/comment
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFkODQ5MzhlMjc1NjQyNmUwM2UwZiIsImlhdCI6MTczMzQ3MjU4OCwiZXhwIjoxNzMzNDc2MTg4fQ.YW6rZLe2E3QUwd8ojOKASv5TJGVBFePygNMK0zJJxeo
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzQxNzI5MWYwYTQ0M2ZlMDc3OGU4MSIsImlhdCI6MTczNTY2MjY3NywiZXhwIjoxNzM1NjY2Mjc3fQ.l0rafYalzL4ZN_Dy6mAdFnd9lSEZ5kv-hKRVX4TBUUA
 Content-Type: application/json
 
 {
-    "content": "this is the first comment ",
-    "postId": "6751cf3a155423d2aa357f95"
+    "content": "this is the fisdfdsfdsfrst דגכגדכדגכגדכגכגד ",
+    "postId": "677417da1f0a443fe0778e86"
 }
 
 ###
 GET http://localhost:3000/api/comment/6751d2ad29babb95e23add2e
+
 ###
 PUT http://localhost:4000/api/comment/6751d2ad29babb95e23add2e
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxNDMxNSwiZXhwIjoxNzMzNDE3OTE1fQ.dWORrIE4ZUFWQt4jaXMAzKw1UnmbIXHL6XJ5A92Yrxc
@@ -59,25 +59,30 @@ DELETE  http://localhost:3000/api/comment/6751d2ad29babb95e23add2e
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTFiNGY4ZDE1NTBjYTA2ZmUyNmJjYiIsImlhdCI6MTczMzQxNDMxNSwiZXhwIjoxNzMzNDE3OTE1fQ.dWORrIE4ZUFWQt4jaXMAzKw1UnmbIXHL6XJ5A92Yrxc
 
 ###
-GET http://localhost:3000/api/comment/get-all-comments/6735e5433fc7b7ca4f640709
+GET http://localhost:3000/api/comment/get-all-comments/677417da1f0a443fe0778e86
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzQxNzI5MWYwYTQ0M2ZlMDc3OGU4MSIsImlhdCI6MTczNTY2MTM2NSwiZXhwIjoxNzM1NjY0OTY1fQ.PkYGBZP0LMHdDnrChdh5TefuUnQFs4WbsZLGymtRWDw
+
+
+
+
   //////////////////////////////////// auth /////////////////////////
 
 
 ###
-POST  http://localhost:4000/api/auth/login
+POST  http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "exm@gmail.com",
+    "email": "em@gmail.com",
     "password": "12346"
 }
 
 ###
-POST  http://localhost:4000/api/auth/register
+POST  http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "exm@gmail.com",
+    "email": "em@gmail.com",
     "password": "12346",
     "userName": "example"
    
