@@ -6,7 +6,7 @@ import commentsModel from '../models/commentsModel';
 import postModel from '../models/postModel';
 import userModel from '../models/userModel';
 
-class PostController {
+class commentsController {
 
    postComment = async (req: Request, res: Response): Promise<void> => {
       const { content, postId, userId } = req.body;
@@ -105,4 +105,4 @@ class PostController {
    }
 }
 
-export default new PostController();
+export default new commentsController();

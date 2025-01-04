@@ -94,7 +94,7 @@ GET  http://localhost:3000/api/auth/refreshToken
 Content-Type: application/json
 
 {
-   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWQ3MTExMGQ4M2Y2YzUxNWZjNjQ4NiIsImlhdCI6MTczNDE3NzA3OSwiZXhwIjoxNzM0NzgxODc5fQ.ygMv3FvoCSsDn2V8pXlTNU920UUB60wpy0lb4dZKrRA"
+   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZkODAyNjlmYWUxZjVlYzhkOWRmZCIsImlhdCI6MTczNTg0MTc5NywiZXhwIjoxNzM2NDQ2NTk3fQ.RgyD6msXyfmXLgAvUEFUeP40HH1Z21FBYYeeTVHxBsg"
 }
 
 ###
@@ -109,5 +109,5 @@ GET  http://localhost:3000/api/auth/logout
 Content-Type: application/json
 
 {
-   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWQ3MTExMGQ4M2Y2YzUxNWZjNjQ4NiIsImlhdCI6MTczNDE3NzA3OSwiZXhwIjoxNzM0NzgxODc5fQ.ygMv3FvoCSsDn2V8pXlTNU920UUB60wpy0lb4dZKrRA"
+   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzZkODAyNjlmYWUxZjVlYzhkOWRmZCIsImlhdCI6MTczNTg0MTc5NywiZXhwIjoxNzM2NDQ2NTk3fQ.RgyD6msXyfmXLgAvUEFUeP40HH1Z21FBYYeeTVHxBsg"
 }

@@ -136,5 +136,6 @@ router.get('/posts/:id', postController_1.default.getPostById);
 router.put('/posts/:id', authMiddleware_1.default, postController_1.default.updateById);
 router.delete('/posts/:id', authMiddleware_1.default, postController_1.default.deletePost);
 router.post('/posts/upload', authMiddleware_1.default, multerMiddleware_1.default, postController_1.default.savePhoto);
+router.post('/posts/ai', postController_1.default.getAiContent);
 exports.default = router;
 //# sourceMappingURL=postRoutes.js.map

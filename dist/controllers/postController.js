@@ -17,13 +17,29 @@ const response_1 = require("../utils/response");
 const mongoose_1 = require("mongoose");
 const commentsModel_1 = __importDefault(require("../models/commentsModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
+const openai_1 = __importDefault(require("openai"));
+const openai = new openai_1.default({
+    apiKey: process.env.OPENAI_API_KEY
+});
 class PostController {
     constructor() {
         this.getAllPosts = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const getPosts = yield postModel_1.default.find();
+                const page = parseInt(req.query.page) || 1;
+                const limit = parseInt(req.query.limit) || 5;
+                const skip = (page - 1) * limit;
+                const [getPosts, total] = yield Promise.all([
+                    postModel_1.default.find().skip(skip).limit(limit),
+                    postModel_1.default.countDocuments()
+                ]);
                 if (getPosts) {
-                    (0, response_1.responseReturn)(res, 200, { getPosts, message: "posts fetched" });
+                    (0, response_1.responseReturn)(res, 200, {
+                        getPosts,
+                        currentPage: page,
+                        totalPages: Math.ceil(total / limit),
+                        totalPosts: total,
+                        message: "posts fetched"
+                    });
                 }
                 else {
                     (0, response_1.responseReturn)(res, 400, { message: "Problem in fetching posts" });
@@ -95,10 +111,13 @@ class PostController {
                 const post = yield postModel_1.default.findById(new mongoose_1.Types.ObjectId(id));
                 if (userId !== post.ownerId.toString()) {
                     (0, response_1.responseReturn)(res, 400, { message: "you are not the owner of this post" });
+                    return;
                 }
-                const updatePost = yield postModel_1.default.findByIdAndUpdate(new mongoose_1.Types.ObjectId(id), { content, title }, { new: true });
+                const postImg = req.body.img;
+                const updatePost = yield postModel_1.default.findByIdAndUpdate(new mongoose_1.Types.ObjectId(id), { content, title, postImg }, { new: true });
                 if (updatePost) {
                     (0, response_1.responseReturn)(res, 201, { updatePost, message: "post updated by id" });
+                    return;
                 }
                 else {
                     (0, response_1.responseReturn)(res, 400, { message: "post not updated by id" });
@@ -141,11 +160,13 @@ class PostController {
                 const post = yield postModel_1.default.findById(new mongoose_1.Types.ObjectId(id));
                 if (post.ownerId.toString() !== userId) {
                     (0, response_1.responseReturn)(res, 400, { message: "you are not the owner of this post" });
+                    return;
                 }
                 const deletePost = yield postModel_1.default.findByIdAndDelete(new mongoose_1.Types.ObjectId(id));
                 if (deletePost) {
                     yield commentsModel_1.default.deleteMany({ postId: new mongoose_1.Types.ObjectId(id) });
                     (0, response_1.responseReturn)(res, 200, { message: "post deleted" });
+                    return;
                 }
                 else {
                     (0, response_1.responseReturn)(res, 400, { message: "post not deleted" });
@@ -166,6 +187,21 @@ class PostController {
             }
             catch (error) {
                 (0, response_1.responseReturn)(res, 500, { message: "Error uploading file" });
+            }
+        });
+        this.getAiContent = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { title } = req.body;
+            try {
+                const chatCompletion = yield openai.chat.completions.create({
+                    model: "gpt-3.5-turbo",
+                    messages: [{ role: "user", content: `Generate content based on the title: ${title}` }],
+                });
+                const aiContent = chatCompletion.choices[0].message.content.trim();
+                (0, response_1.responseReturn)(res, 200, { content: aiContent });
+            }
+            catch (error) {
+                console.error("Error generating AI content:", error);
+                (0, response_1.responseReturn)(res, 500, { message: "Error generating AI content" });
             }
         });
     }

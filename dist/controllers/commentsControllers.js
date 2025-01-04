@@ -17,7 +17,7 @@ const response_1 = require("../utils/response");
 const commentsModel_1 = __importDefault(require("../models/commentsModel"));
 const postModel_1 = __importDefault(require("../models/postModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
-class PostController {
+class commentsController {
     constructor() {
         this.postComment = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { content, postId, userId } = req.body;
@@ -66,13 +66,16 @@ class PostController {
                 const comment = yield commentsModel_1.default.findById(new mongoose_1.Types.ObjectId(commentId));
                 if (comment.ownerId.toString() !== userId) {
                     (0, response_1.responseReturn)(res, 400, { message: "you are not the owner of this comment" });
+                    return;
                 }
                 const updatedComment = yield commentsModel_1.default.findByIdAndUpdate(new mongoose_1.Types.ObjectId(commentId), { content: content }, { new: true });
                 if (updatedComment) {
                     (0, response_1.responseReturn)(res, 200, { updatedComment, message: "success" });
+                    return;
                 }
                 else {
                     (0, response_1.responseReturn)(res, 400, { message: "problem with new" });
+                    return;
                 }
             }
             catch (error) {
@@ -86,10 +89,12 @@ class PostController {
                 const comment = yield commentsModel_1.default.findById(new mongoose_1.Types.ObjectId(commentId));
                 if (comment.ownerId.toString() !== userId) {
                     (0, response_1.responseReturn)(res, 400, { message: "you are not the owner of this comment" });
+                    return;
                 }
                 yield commentsModel_1.default.findByIdAndDelete(new mongoose_1.Types.ObjectId(commentId));
                 yield postModel_1.default.findByIdAndUpdate(comment.postId, { $inc: { comments: -1 } });
                 (0, response_1.responseReturn)(res, 200, { message: "comment deleted successfully" });
+                return;
             }
             catch (error) {
                 (0, response_1.responseReturn)(res, 400, { message: "internal server error" });
@@ -112,5 +117,5 @@ class PostController {
         });
     }
 }
-exports.default = new PostController();
+exports.default = new commentsController();
 //# sourceMappingURL=commentsControllers.js.map

@@ -64,7 +64,7 @@ login = async (req: Request, res: Response): Promise<void> => {
 
    //end
 refreshToken = async (req: Request, res: Response): Promise<void> => {
-    const { refreshToken } = req.body;
+    const { refreshToken } = req.query;
     if (!refreshToken) {
         responseReturn(res, 400, { error: "Refresh token is required" });
         return;
