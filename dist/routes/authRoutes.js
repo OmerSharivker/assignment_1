@@ -90,5 +90,6 @@ router.post('/auth/register', authControllers_1.default.register);
 router.get('/auth/refreshToken', authControllers_1.default.refreshToken);
 router.post('/auth/logout', authControllers_1.default.logout);
 router.get('/auth/user', authMiddleware_1.default, authControllers_1.default.getUserInfo);
+router.post('/auth/user/update', authMiddleware_1.default, authControllers_1.default.profileUpdate);
 exports.default = router;
 //# sourceMappingURL=authRoutes.js.map

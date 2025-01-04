@@ -4,9 +4,13 @@ import { responseReturn } from "../utils/response";
 import { Types } from 'mongoose';
 import commentsModel from "../models/commentsModel";
 import userModel from "../models/userModel";
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+import dotenv from 'dotenv';
+import { GenerateContentRequest } from '../../node_modules/@google/generative-ai/dist/server/types/requests.d';
+dotenv.config();
 
-
-
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 class PostController {
     getAllPosts = async (req: Request, res: Response): Promise<void> => {
@@ -176,6 +180,22 @@ savePhoto = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
+
+getAiContent = async (req: Request, res: Response): Promise<void> => {
+    const { title } = req.body;
+    try {
+        const prompt = `generate content for a blog post titled "${title}" used only 70 words`;
+        const result = await model.generateContent(prompt);
+        console.log(result.response.text());
+        const aiContent = result.response.text();
+        responseReturn(res, 200, { content: aiContent });
+    } catch (error) {
+        console.error("Error generating AI content:", error);
+        responseReturn(res, 500, { message: "Error generating AI content" });
+    }
+}
+
 }
 
 export default new PostController();
+

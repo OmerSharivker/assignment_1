@@ -151,4 +151,8 @@ router.delete('/posts/:id', authMiddleware, postController.deletePost);
 
 router.post('/posts/upload', authMiddleware ,  multerMiddleware , postController.savePhoto);
 
+
+
+router.post('/posts/ai' , postController.getAiContent);
+
 export default router;

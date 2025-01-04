@@ -17,6 +17,7 @@ const response_1 = require("../utils/response");
 const userModel_1 = __importDefault(require("../models/userModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const token_1 = require("../utils/token");
+const postModel_1 = __importDefault(require("../models/postModel"));
 class authControllers {
     constructor() {
         this.login = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -73,7 +74,7 @@ class authControllers {
         });
         //end
         this.refreshToken = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { refreshToken } = req.body;
+            const { refreshToken } = req.query;
             if (!refreshToken) {
                 (0, response_1.responseReturn)(res, 400, { error: "Refresh token is required" });
                 return;
@@ -112,12 +113,26 @@ class authControllers {
             }
         });
         this.getUserInfo = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.body;
-            const user = yield userModel_1.default.findById(new mongoose_1.Types.ObjectId(id));
+            const { userId } = req.body;
+            const user = yield userModel_1.default.findById(new mongoose_1.Types.ObjectId(userId));
             if (user) {
                 const image = user.image ? user.image : null;
                 const userName = user.userName ? user.userName : null;
+                const userId = user._id.toString();
+                (0, response_1.responseReturn)(res, 200, { image, userName, userId });
+                return;
+            }
+            else {
+                (0, response_1.responseReturn)(res, 400, { error: "user not found" });
+            }
+        });
+        this.profileUpdate = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { userId, image, userName } = req.body;
+            const user = yield userModel_1.default.findByIdAndUpdate(new mongoose_1.Types.ObjectId(userId), { image, userName }, { new: true });
+            yield postModel_1.default.findOneAndUpdate({ 'ownerId': new mongoose_1.Types.ObjectId(userId) }, { userImg: image, userName }, { new: true });
+            if (user) {
                 (0, response_1.responseReturn)(res, 200, { image, userName });
+                return;
             }
             else {
                 (0, response_1.responseReturn)(res, 400, { error: "user not found" });
