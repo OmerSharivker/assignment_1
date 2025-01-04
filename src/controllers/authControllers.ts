@@ -4,6 +4,7 @@ import {responseReturn}  from '../utils/response';
 import User from '../models/userModel';
 import bcrypt from 'bcrypt';
 import { createToken } from '../utils/token';
+import postModel from '../models/postModel';
 
 class authControllers {
 
@@ -111,6 +112,21 @@ refreshToken = async (req: Request, res: Response): Promise<void> => {
             const userName = user.userName ? user.userName : null;
             const userId = user._id.toString();
             responseReturn(res,200,{image, userName , userId});
+            return;
+        }
+        else{
+            responseReturn(res,400,{error : "user not found"});
+        }
+    }
+
+    profileUpdate = async (req: Request, res: Response): Promise<void> => {
+        const {userId,image,userName} = req.body;
+        
+        const user = await User.findByIdAndUpdate(new Types.ObjectId(userId), {image , userName} , {new : true});
+         await postModel.findOneAndUpdate({'ownerId': new Types.ObjectId(userId) },{userImg :image ,userName} , {new : true});
+       
+        if(user){
+            responseReturn(res,200,{image, userName });
             return;
         }
         else{

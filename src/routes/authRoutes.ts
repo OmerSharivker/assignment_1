@@ -91,5 +91,6 @@ router.post('/auth/register', authControllers.register);
 router.get('/auth/refreshToken', authControllers.refreshToken);
 router.post('/auth/logout',  authControllers.logout);
 router.get('/auth/user', authMiddleware, authControllers.getUserInfo);
+router.post('/auth/user/update', authMiddleware,  authControllers.profileUpdate);
 
 export default router;
