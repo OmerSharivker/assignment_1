@@ -11,9 +11,23 @@ import userModel from "../models/userModel";
 class PostController {
     getAllPosts = async (req: Request, res: Response): Promise<void> => {
         try {
-            const getPosts = await postModel.find();
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 5;
+            const skip = (page - 1) * limit;
+    
+            const [getPosts, total] = await Promise.all([
+                postModel.find().skip(skip).limit(limit),
+                postModel.countDocuments()
+            ]);
+    
             if (getPosts) {
-                responseReturn(res, 200, { getPosts, message: "posts fetched" });
+                responseReturn(res, 200, { 
+                    getPosts, 
+                    currentPage: page,
+                    totalPages: Math.ceil(total / limit),
+                    totalPosts: total,
+                    message: "posts fetched" 
+                });
             } else {
                 responseReturn(res, 400, { message: "Problem in fetching posts" });
             }
