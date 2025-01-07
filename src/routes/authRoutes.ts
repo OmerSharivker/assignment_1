@@ -87,6 +87,7 @@ import authMiddleware from '../middleware/authMiddleware';
 const router: Router = express.Router();
 
 router.post('/auth/login', authControllers.login);
+router.post('/auth/googlelogin', authControllers.googlelogin);
 router.post('/auth/register', authControllers.register);
 router.get('/auth/refreshToken', authControllers.refreshToken);
 router.post('/auth/logout',  authControllers.logout);

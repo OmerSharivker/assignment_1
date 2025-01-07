@@ -133,6 +133,30 @@ refreshToken = async (req: Request, res: Response): Promise<void> => {
             responseReturn(res,400,{error : "user not found"});
         }
     }
-
+    
+    googlelogin = async (req: Request, res: Response): Promise<void> => {
+        const { email, name } = req.body;
+        if (!email) {
+            responseReturn(res, 400, { error: "Email is required" });
+            return;
+        }
+        try {
+            let user = await User.findOne({email})
+            if(!user){
+                user = await User.create({
+                        email,
+                        userName : name,
+                    });
+            }
+            const accessToken  = await createToken({ id: user._id },"1h")
+            const refreshToken = await createToken({ id: user._id }, "7d");
+            user.refreshTokens = user.refreshTokens ? [...(user.refreshTokens as string[]), refreshToken] : [refreshToken];
+            await user.save();
+            responseReturn(res,200,{refreshToken, accessToken, message : "login ok", user})
+          
+        } catch (error) {
+            responseReturn(res,500,{error : "internal server error"})
+        }
+    }
 }
 export default new authControllers();

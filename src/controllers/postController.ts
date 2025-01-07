@@ -186,7 +186,6 @@ getAiContent = async (req: Request, res: Response): Promise<void> => {
     try {
         const prompt = `generate content for a blog post titled "${title}" used only 70 words`;
         const result = await model.generateContent(prompt);
-        console.log(result.response.text());
         const aiContent = result.response.text();
         responseReturn(res, 200, { content: aiContent });
     } catch (error) {
