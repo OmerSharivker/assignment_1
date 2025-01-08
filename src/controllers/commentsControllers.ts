@@ -48,16 +48,11 @@ class commentsController {
 
    updateComment = async (req: Request, res: Response): Promise<void> => {
       const { commentId } = req.params;
-      const { content, userId } = req.body;
+      const { content, postId, img, userName, ownerId } = req.body.commentData;
       try {
-         const comment = await commentsModel.findById(new Types.ObjectId(commentId));
-         if (comment.ownerId.toString() !== userId) {
-            responseReturn(res, 400, { message: "you are not the owner of this comment" });
-            return;
-         }
          const updatedComment = await commentsModel.findByIdAndUpdate(
             new Types.ObjectId(commentId),
-            { content: content },
+            { content, postId, img, userName, ownerId },
             { new: true }
          );
          if (updatedComment) {

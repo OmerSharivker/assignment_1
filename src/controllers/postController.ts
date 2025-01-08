@@ -18,9 +18,9 @@ class PostController {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 5;
             const skip = (page - 1) * limit;
-    
+            const sort = req.query.sort as string || "createdAt";
             const [getPosts, total] = await Promise.all([
-                postModel.find().skip(skip).limit(limit),
+                postModel.find().sort('-'+sort).skip(skip).limit(limit),
                 postModel.countDocuments()
             ]);
     
@@ -97,15 +97,9 @@ class PostController {
 
     updateById = async (req: Request, res: Response): Promise<void> => {
         const { id } = req.params;
-        const { content, title, userId } = req.body;
+        const { content, title, userName, userImg, postImg } = req.body;
         try {
-            const post = await postModel.findById(new Types.ObjectId(id));
-            if(userId !== post.ownerId.toString()){
-                responseReturn(res, 400, { message: "you are not the owner of this post" });
-                return;
-            }
-            const postImg = req.body.img;
-            const updatePost = await postModel.findByIdAndUpdate(new Types.ObjectId(id), { content, title , postImg } , { new: true });
+            const updatePost = await postModel.findByIdAndUpdate(new Types.ObjectId(id), { content, title , postImg, userName, userImg } , { new: true });
             if (updatePost) {
                 responseReturn(res, 201, { updatePost, message: "post updated by id" });
                 return;
