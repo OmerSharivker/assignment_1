@@ -17,26 +17,39 @@ const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 let commentId = "";
 let postId = "";
+let ownerId = "";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const loginRes = yield (0, supertest_1.default)(app_1.default).post('/api/auth/login').send({
-            email: 'ur@gmail.com',
-            password: '123456'
+        // Register a new user
+        const registerRes = yield (0, supertest_1.default)(app_1.default)
+            .post('/api/auth/register')
+            .send({
+            email: 'testuser2@example.com',
+            password: 'testpassword',
+            userName: 'testuser'
         });
-        if (loginRes.statusCode !== 200) {
-            console.error("Login failed:", loginRes.body);
-        }
+        expect(registerRes.statusCode).toEqual(200);
+        // Login with the new user
+        const loginRes = yield (0, supertest_1.default)(app_1.default)
+            .post('/api/auth/login')
+            .send({
+            email: 'testuser2@example.com',
+            password: 'testpassword'
+        });
+        expect(loginRes.statusCode).toEqual(200);
         global.token = loginRes.body.accessToken;
         expect(global.token).toBeDefined();
-        //create post here and save the id
-        const res = yield (0, supertest_1.default)(app_1.default)
+        // Create a post
+        const postRes = yield (0, supertest_1.default)(app_1.default)
             .post('/api/posts')
             .set('Authorization', `Bearer ${global.token}`)
             .send({
-            message: "This is a test post"
+            content: "This is a test post",
+            title: "Test Post",
+            img: "test.jpg"
         });
-        expect(res.statusCode).toEqual(201);
-        postId = res.body._id;
+        expect(postRes.statusCode).toEqual(201);
+        postId = postRes.body.newPost._id;
     }
     catch (error) {
         console.error("Error during beforeAll setup:", error);
@@ -47,7 +60,6 @@ afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
 describe("Comments tests", () => {
-    // create comment
     test("create comment", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(app_1.default)
             .post('/api/comment')
@@ -59,35 +71,37 @@ describe("Comments tests", () => {
         expect(res.statusCode).toEqual(201);
         expect(res.body).toHaveProperty("content", "This is a test comment");
         commentId = res.body._id;
+        ownerId = res.body.ownerId;
     }));
-    // get comment by id
     test("get comment by id", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(app_1.default).get(`/api/comment/${commentId}`);
         expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveProperty("content", "This is a test comment");
     }));
-    // update comment
     test("update comment", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(app_1.default)
             .put(`/api/comment/${commentId}`)
             .set('Authorization', `Bearer ${global.token}`)
             .send({
-            content: "This is an updated comment",
-            postId: postId,
+            commentData: {
+                content: "This is an updated comment",
+                postId: postId,
+                img: "test.jpg",
+                userName: "testuser",
+                ownerId: ownerId
+            }
         });
         expect(res.statusCode).toEqual(200);
         expect(res.body.updatedComment).toHaveProperty("content", "This is an updated comment");
         expect(res.body).toHaveProperty("message", "success");
     }));
-    // get comment by post id
-    test("get comment by post id", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("get comments by post id", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(app_1.default).get(`/api/comment/get-all-comments/${postId}`);
         expect(res.statusCode).toEqual(200);
         expect(Array.isArray(res.body.allComments)).toBe(true);
         expect(res.body.allComments[0]).toHaveProperty("content", "This is an updated comment");
         expect(res.body.allComments[0]).toHaveProperty("postId", postId);
     }));
-    // delete comment by id
     test("delete comment by id", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(app_1.default)
             .delete(`/api/comment/${commentId}`)

@@ -57,8 +57,8 @@ class PostController {
                 postImg
 
             });
-            if (newPost) {
-                responseReturn(res, 201, { message: "new post created" });
+            if (newPost) {   
+                responseReturn(res, 201, { newPost,message: "new post created" });
             } else {
                 responseReturn(res, 400, { message: "new post not working" });
                 
@@ -97,9 +97,15 @@ class PostController {
 
     updateById = async (req: Request, res: Response): Promise<void> => {
         const { id } = req.params;
-        const { content, title, userName, userImg, postImg } = req.body;
+        const { content, title, userId } = req.body;
         try {
-            const updatePost = await postModel.findByIdAndUpdate(new Types.ObjectId(id), { content, title , postImg, userName, userImg } , { new: true });
+            const post = await postModel.findById(new Types.ObjectId(id));
+            if(userId !== post.ownerId.toString()){
+                responseReturn(res, 400, { message: "you are not the owner of this post" });
+                return;
+            }
+            const postImg = req.body.img;
+            const updatePost = await postModel.findByIdAndUpdate(new Types.ObjectId(id), { content, title , postImg } , { new: true });
             if (updatePost) {
                 responseReturn(res, 201, { updatePost, message: "post updated by id" });
                 return;
@@ -177,13 +183,16 @@ savePhoto = async (req: Request, res: Response): Promise<void> => {
 
 getAiContent = async (req: Request, res: Response): Promise<void> => {
     const { title } = req.body;
+  
     try {
+        if(!title){
+            throw new Error("Title is required");    
+        }
         const prompt = `generate content for a blog post titled "${title}" used only 70 words`;
         const result = await model.generateContent(prompt);
         const aiContent = result.response.text();
         responseReturn(res, 200, { content: aiContent });
     } catch (error) {
-        console.error("Error generating AI content:", error);
         responseReturn(res, 500, { message: "Error generating AI content" });
     }
 }

@@ -9,7 +9,7 @@ import userModel from '../models/userModel';
 class commentsController {
 
    postComment = async (req: Request, res: Response): Promise<void> => {
-      const { content, postId, userId } = req.body;
+      const { content, postId, userId } = req.body;  
       try {
          const user = await userModel.findById(new Types.ObjectId(userId));
          const  userName = user.userName;
@@ -24,6 +24,7 @@ class commentsController {
          if (newComment) {
             await postModel.findByIdAndUpdate(new Types.ObjectId(postId), { $inc : { comments: 1 } }, { new: true });
             responseReturn(res, 201, newComment);
+            return;
          } else {
             responseReturn(res, 400, { message: "problem with new comment" });
          }
@@ -55,6 +56,7 @@ class commentsController {
             { content, postId, img, userName, ownerId },
             { new: true }
          );
+      
          if (updatedComment) {
             responseReturn(res, 200, { updatedComment, message: "success" });
             return;

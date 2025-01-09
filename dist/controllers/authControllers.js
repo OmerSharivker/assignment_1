@@ -138,6 +138,30 @@ class authControllers {
                 (0, response_1.responseReturn)(res, 400, { error: "user not found" });
             }
         });
+        this.googlelogin = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { email, name } = req.body;
+            if (!email) {
+                (0, response_1.responseReturn)(res, 400, { error: "Email is required" });
+                return;
+            }
+            try {
+                let user = yield userModel_1.default.findOne({ email });
+                if (!user) {
+                    user = yield userModel_1.default.create({
+                        email,
+                        userName: name,
+                    });
+                }
+                const accessToken = yield (0, token_1.createToken)({ id: user._id }, "1h");
+                const refreshToken = yield (0, token_1.createToken)({ id: user._id }, "7d");
+                user.refreshTokens = user.refreshTokens ? [...user.refreshTokens, refreshToken] : [refreshToken];
+                yield user.save();
+                (0, response_1.responseReturn)(res, 200, { refreshToken, accessToken, message: "login ok", user });
+            }
+            catch (error) {
+                (0, response_1.responseReturn)(res, 500, { error: "internal server error" });
+            }
+        });
     }
 }
 exports.default = new authControllers();
