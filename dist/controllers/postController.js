@@ -17,10 +17,11 @@ const response_1 = require("../utils/response");
 const mongoose_1 = require("mongoose");
 const commentsModel_1 = __importDefault(require("../models/commentsModel"));
 const userModel_1 = __importDefault(require("../models/userModel"));
-const openai_1 = __importDefault(require("openai"));
-const openai = new openai_1.default({
-    apiKey: process.env.OPENAI_API_KEY
-});
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 class PostController {
     constructor() {
         this.getAllPosts = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -28,8 +29,9 @@ class PostController {
                 const page = parseInt(req.query.page) || 1;
                 const limit = parseInt(req.query.limit) || 5;
                 const skip = (page - 1) * limit;
+                const sort = req.query.sort || "createdAt";
                 const [getPosts, total] = yield Promise.all([
-                    postModel_1.default.find().skip(skip).limit(limit),
+                    postModel_1.default.find().sort('-' + sort).skip(skip).limit(limit),
                     postModel_1.default.countDocuments()
                 ]);
                 if (getPosts) {
@@ -65,7 +67,7 @@ class PostController {
                     postImg
                 });
                 if (newPost) {
-                    (0, response_1.responseReturn)(res, 201, { message: "new post created" });
+                    (0, response_1.responseReturn)(res, 201, { newPost, message: "new post created" });
                 }
                 else {
                     (0, response_1.responseReturn)(res, 400, { message: "new post not working" });
@@ -192,15 +194,15 @@ class PostController {
         this.getAiContent = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { title } = req.body;
             try {
-                const chatCompletion = yield openai.chat.completions.create({
-                    model: "gpt-3.5-turbo",
-                    messages: [{ role: "user", content: `Generate content based on the title: ${title}` }],
-                });
-                const aiContent = chatCompletion.choices[0].message.content.trim();
+                if (!title) {
+                    throw new Error("Title is required");
+                }
+                const prompt = `generate content for a blog post titled "${title}" used only 70 words`;
+                const result = yield model.generateContent(prompt);
+                const aiContent = result.response.text();
                 (0, response_1.responseReturn)(res, 200, { content: aiContent });
             }
             catch (error) {
-                console.error("Error generating AI content:", error);
                 (0, response_1.responseReturn)(res, 500, { message: "Error generating AI content" });
             }
         });

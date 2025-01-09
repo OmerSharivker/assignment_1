@@ -19,13 +19,23 @@ let id = "";
 let fakeId = "6751b12f555b26da3d29cf74";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const loginRes = yield (0, supertest_1.default)(app_1.default).post('/api/auth/login').send({
-            email: 'ur@gmail.com',
-            password: '123456'
+        // Register a new user
+        const registerRes = yield (0, supertest_1.default)(app_1.default)
+            .post('/api/auth/register')
+            .send({
+            email: 'testuser@example.com',
+            password: 'testpassword',
+            userName: 'testuser'
         });
-        if (loginRes.statusCode !== 200) {
-            console.error("Login failed:", loginRes.body);
-        }
+        expect(registerRes.statusCode).toEqual(200);
+        // Login with the new user
+        const loginRes = yield (0, supertest_1.default)(app_1.default)
+            .post('/api/auth/login')
+            .send({
+            email: 'testuser@example.com',
+            password: 'testpassword'
+        });
+        expect(loginRes.statusCode).toEqual(200);
         global.token = loginRes.body.accessToken;
         expect(global.token).toBeDefined();
     }
@@ -50,20 +60,20 @@ describe("Posts tests", () => {
             .post('/api/posts')
             .set('Authorization', `Bearer ${global.token}`)
             .send({
-            message: "This is a test post"
+            content: "This is a test post",
+            title: "Test Post",
+            img: "test.jpg"
         });
         expect(res.statusCode).toEqual(201);
-        expect(res.body).toHaveProperty("message", "This is a test post");
-        id = res.body._id;
+        expect(res.body).toHaveProperty("message", "new post created");
+        id = res.body.newPost._id;
     }));
-    //get post by id
     test("get post by id", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(app_1.default).get(`/api/posts/${id}`);
         expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveProperty("post");
         expect(res.body).toHaveProperty("message", "post found by id");
     }));
-    //get post by sender
     test("get post by sender", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(app_1.default)
             .get('/api/posts/sender')
@@ -72,20 +82,42 @@ describe("Posts tests", () => {
         expect(res.body).toHaveProperty("senderPosts");
         expect(Array.isArray(res.body.senderPosts)).toBe(true);
     }));
-    //update post by id
     test("update post by id", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(app_1.default)
             .put(`/api/posts/${id}`)
             .set('Authorization', `Bearer ${global.token}`)
             .send({
-            message: "This is an updated test post"
+            content: "This is an updated test post",
+            title: "Updated Test Post",
+            img: "updated.jpg"
         });
         expect(res.statusCode).toEqual(201);
-        expect(res.body).toHaveProperty("updatePost");
         expect(res.body).toHaveProperty("message", "post updated by id");
-        expect(res.body.updatePost.message).toEqual("This is an updated test post");
+        expect(res.body.updatePost.content).toEqual("This is an updated test post");
     }));
-    // Test for saving a post when the request body is incorrect or missing fields
+    test("like post", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .put(`/api/posts/like/${id}`)
+            .set('Authorization', `Bearer ${global.token}`);
+        expect(res.statusCode).toEqual(200);
+        expect(res.body).toHaveProperty("post");
+        expect(res.body).toHaveProperty("message", "post liked");
+    }));
+    test("unlike post", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .put(`/api/posts/like/${id}`)
+            .set('Authorization', `Bearer ${global.token}`);
+        expect(res.statusCode).toEqual(200);
+        expect(res.body).toHaveProperty("post");
+        expect(res.body).toHaveProperty("message", "post unliked");
+    }));
+    test("delete post by id", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .delete(`/api/posts/${id}`)
+            .set('Authorization', `Bearer ${global.token}`);
+        expect(res.statusCode).toEqual(200);
+        expect(res.body).toHaveProperty("message", "post deleted");
+    }));
     test("save post - failure", () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.default)(app_1.default)
             .post('/api/posts')
@@ -94,23 +126,48 @@ describe("Posts tests", () => {
         expect(res.statusCode).toEqual(500);
         expect(res.body).toHaveProperty("message", "unknown error");
     }));
-    // Test for getting a post by ID that does not exist
     test("get post by id - failure (post not found)", () => __awaiter(void 0, void 0, void 0, function* () {
-        const res = yield (0, supertest_1.default)(app_1.default).get(`/api/posts/nonexistentId`);
-        expect(res.statusCode).toEqual(500);
-        expect(res.body).toHaveProperty("message", "problem with find by id");
+        const res = yield (0, supertest_1.default)(app_1.default).get(`/api/posts/${fakeId}`);
+        expect(res.statusCode).toEqual(400);
+        expect(res.body).toHaveProperty("message", "post not found by id");
     }));
-    // Test for updating a post when the user is not the owner
     test("update post by id - failure (not the owner)", () => __awaiter(void 0, void 0, void 0, function* () {
-        // Create a new post as another user and try to update it
         const res = yield (0, supertest_1.default)(app_1.default)
             .put(`/api/posts/${fakeId}`)
             .set('Authorization', `Bearer ${global.token}`)
             .send({
-            message: "Trying to update another user's post"
+            content: "Trying to update another user's post",
+            title: "Fake Post",
+            img: "fake.jpg"
         });
         expect(res.statusCode).toEqual(500);
         expect(res.body).toHaveProperty("message", "problem with updated by id");
+    }));
+    test("like post - failure (post not found)", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .put(`/api/posts/like/${fakeId}`)
+            .set('Authorization', `Bearer ${global.token}`);
+        expect(res.statusCode).toEqual(500);
+        expect(res.body).toHaveProperty("message", "problem with like post");
+    }));
+    test("delete post by id - failure (post not found)", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .delete(`/api/posts/${fakeId}`)
+            .set('Authorization', `Bearer ${global.token}`);
+        expect(res.statusCode).toEqual(500);
+        expect(res.body).toHaveProperty("message", "problem with delete post");
+    }));
+    test("get post by sender - failure (no token)", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default).get('/api/posts/sender');
+        expect(res.statusCode).toEqual(401);
+        expect(res.body).toHaveProperty("message", "No token provided");
+    }));
+    test("generate AI content - failure (missing title)", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(app_1.default)
+            .post('/api/posts/ai')
+            .send({});
+        expect(res.statusCode).toEqual(500);
+        expect(res.body).toHaveProperty("message");
     }));
 });
 //# sourceMappingURL=post.test.js.map
