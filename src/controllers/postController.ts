@@ -6,7 +6,7 @@ import commentsModel from "../models/commentsModel";
 import userModel from "../models/userModel";
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 import dotenv from 'dotenv';
-import { GenerateContentRequest } from '../../node_modules/@google/generative-ai/dist/server/types/requests.d';
+
 dotenv.config();
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
@@ -153,9 +153,10 @@ class PostController {
                 return;
             }
             const deletePost = await postModel.findByIdAndDelete(new Types.ObjectId(id));
+           
             if (deletePost) {
                 await commentsModel.deleteMany({ postId: new Types.ObjectId(id) });
-                responseReturn(res, 200, { message: "post deleted" });
+                responseReturn(res, 200, { post : deletePost,message: "post deleted" });
                 return;
             } else {
                 responseReturn(res, 400, { message: "post not deleted" });
@@ -168,6 +169,7 @@ class PostController {
  
 
 savePhoto = async (req: Request, res: Response): Promise<void> => {
+  
     try {
         if (!req.file) {
             responseReturn(res, 400, { message: "file not found" });
