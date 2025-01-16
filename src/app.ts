@@ -13,11 +13,10 @@ const app = express();
 app.use(express.static('public'));
 // Enable CORS for all routes
 app.use(cors());
-const omer="omer";
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+const omer = "omerss";
 // Serve static files from the "public" directory
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));

@@ -7,9 +7,8 @@
     "test": "jest --coverage --detectOpenHandles --forceExit --no-watch dist/tests",
     "start": "node dist/server.js",
     "dev": "nodemon --watch src --exec ts-node src/server.ts",
-    "build": "tsc",
-    "watch": "tsc --watch",
-    "dev:watch": "concurrently \"npm run watch\" \"nodemon dist/server.js\""
+    "build": "rimraf dist && tsc",
+    "watch": "tsc --watch"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +26,7 @@
     "mongoose": "^8.8.1",
     "multer": "^1.4.5-lts.1",
     "openai": "^4.77.3",
+    "rimraf": "^6.0.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },

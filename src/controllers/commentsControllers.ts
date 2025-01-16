@@ -80,7 +80,7 @@ class commentsController {
          }
          await commentsModel.findByIdAndDelete(new Types.ObjectId(commentId));
          await postModel.findByIdAndUpdate(comment.postId, { $inc: { comments: -1 } });
-         responseReturn(res, 200, { message: "comment deleted successfully" });
+         responseReturn(res, 200, { commentId,message: "comment deleted successfully" });
          return;
       } catch (error) {
          responseReturn(res, 400, { message: "internal server error" });
