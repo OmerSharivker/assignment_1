@@ -5,6 +5,8 @@ import User from '../models/userModel';
 import bcrypt from 'bcrypt';
 import { createToken } from '../utils/token';
 import postModel from '../models/postModel';
+import commentsModel from '../models/commentsModel';
+
 
 class authControllers {
 
@@ -121,9 +123,13 @@ refreshToken = async (req: Request, res: Response): Promise<void> => {
 
     profileUpdate = async (req: Request, res: Response): Promise<void> => {
         const {userId,image,userName} = req.body;
-        
+    
         const user = await User.findByIdAndUpdate(new Types.ObjectId(userId), {image , userName} , {new : true});
-         await postModel.findOneAndUpdate({'ownerId': new Types.ObjectId(userId) },{userImg :image ,userName} , {new : true});
+
+         await postModel.updateMany({'ownerId': new Types.ObjectId(userId) },{userImg :image ,userName} , {new : true});
+       
+         await commentsModel.updateMany({'ownerId': new Types.ObjectId(userId) },{userImg :image ,userName} , {new : true});
+      
        
         if(user){
             responseReturn(res,200,{image, userName });

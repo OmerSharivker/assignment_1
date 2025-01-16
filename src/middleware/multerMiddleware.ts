@@ -4,8 +4,9 @@ import multer from 'multer';
 const storage = multer.diskStorage({
     destination: 'uploads/',
     filename: (req, file, cb) => {
+        const ext = file.originalname.split('.').filter(Boolean).slice(1).join('.');
         // Keep original filename with extension
-        cb(null, file.originalname);
+        cb(null, Date.now() + '.' + ext);
     }
 });
 

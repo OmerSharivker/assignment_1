@@ -153,7 +153,6 @@ class PostController {
                 return;
             }
             const deletePost = await postModel.findByIdAndDelete(new Types.ObjectId(id));
-           
             if (deletePost) {
                 await commentsModel.deleteMany({ postId: new Types.ObjectId(id) });
                 responseReturn(res, 200, { post : deletePost,message: "post deleted" });
@@ -175,7 +174,7 @@ savePhoto = async (req: Request, res: Response): Promise<void> => {
             responseReturn(res, 400, { message: "file not found" });
             return;
         }
-        const fileUrl = `/uploads/${req.file.originalname}`;  // Fixed template string syntax
+        const fileUrl = `/uploads/${req.file.filename}`;  // Fixed template string syntax
         responseReturn(res, 200, { url: fileUrl });
     } catch (error) {
         responseReturn(res, 500, { message: "Error uploading file" });
