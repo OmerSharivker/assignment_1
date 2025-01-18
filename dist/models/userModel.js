@@ -16,7 +16,7 @@ const UserSchema = new mongoose_1.Schema({
     },
     image: {
         type: String,
-        default: '/image.png'
+        default: '/api/image.png'
     },
     userName: {
         type: String,

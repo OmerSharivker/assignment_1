@@ -18,8 +18,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const omer = "omerss";
 // Serve static files from the "public" directory
-app.use(express.static('public'));
-app.use('/uploads', express.static('uploads'));
+app.use('/api/public', express.static('public'));
+app.use('/api/uploads', express.static('uploads'));
+
 
 app.get('/', (req, res) => {
     res.send("hello");

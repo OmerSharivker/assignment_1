@@ -32,7 +32,6 @@ login = async (req: Request, res: Response): Promise<void> => {
       user.refreshTokens = user.refreshTokens ? [...(user.refreshTokens as string[]), refreshToken] : [refreshToken];
       await user.save();
       responseReturn(res,200,{refreshToken, accessToken, message : "login ok", user})
-    
   } catch (error) {
       responseReturn(res,500,{error : "internal server error"})
   }
@@ -128,9 +127,8 @@ refreshToken = async (req: Request, res: Response): Promise<void> => {
 
          await postModel.updateMany({'ownerId': new Types.ObjectId(userId) },{userImg :image ,userName} , {new : true});
        
-         await commentsModel.updateMany({'ownerId': new Types.ObjectId(userId) },{userImg :image ,userName} , {new : true});
+         await commentsModel.updateMany({'ownerId': new Types.ObjectId(userId) },{img :image ,userName} , {new : true});
       
-       
         if(user){
             responseReturn(res,200,{image, userName });
             return;

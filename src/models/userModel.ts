@@ -16,7 +16,7 @@ const UserSchema =new Schema({
     },
     image:{
         type: String,
-        default: '/image.png'
+        default: '/public/image.png'
     },
     userName:{
         type: String,
